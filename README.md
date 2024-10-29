@@ -1,6 +1,34 @@
 # COMP3330-Project: HKU EventEase
 
 ## Overview
-Navigating through bulk daily emails can be a tedious task for HKU students, making it easy to overlook important seminars, club activities, and other events which might be of interest to them and this leads to missed opportunities and diminished campus engagement. **HKU EventEase** is a mobile application designed to simplify this process by offering a centralized platform for discovering, browsing and filtering upcoming activities in real-time. Unlike current communication methods that overwhelm users with notifications at inconvenient times, our app provides a seamless browsing experience along with timely alerts, ensuring that students stay informed and never miss events that matter to them.
+**HKU EventEase** is a mobile application designed to simplify this process by offering a centralized platform for discovering, browsing and filtering upcoming activities in real-time.
 
 ## Installation
+
+## Coding Standards
+
+Follow the [Flutter Style Guide] (https://github.com/flutter/flutter/blob/master/docs/contributing/Style-guide-for-Flutter-repo.md)
+
+### Code Style Guidelines
+- **Indentation**: use 2 spaces
+- **Line Length** : Aim a maximum line length of 80-120 characters
+- **Naming Conventions**:
+	- `lowerCamelCase` for variables and function names
+	- `UpperCamelCase` for class names
+	- `snake_case` for file names
+
+## Contributing
+1. Create a branch for a new feature: `git checkout -b feature/your-feature-name`
+2. Commit your changes with meaningful message  
+    - Follow the [Git Commit Message Convention] (https://www.conventionalcommits.org/en/v1.0.0/)
+	- One-line: `git commit -m "<type>[optional scope]: <description>"`
+    - Detailed: `git commit`
+    - ```git
+        <type>[optional scope]: <description>
+    
+        [optional body]
+    
+        [optional footer(s)]    
+        ```
+3. Push to the repo: `git push origin feature/your-feature-name`
+4. Do not push UNTESTED CODE to the main branch
