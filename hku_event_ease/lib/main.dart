@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,32 +14,31 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'HKU EVENTEASE',
         theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // TRY THIS: Try running your application with "flutter run". You'll see
-          // the application has a purple toolbar. Then, without quitting the app,
-          // try changing the seedColor in the colorScheme below to Colors.green
-          // and then invoke "hot reload" (save your changes or press the "hot
-          // reload" button in a Flutter-supported IDE, or press "r" if you used
-          // the command line to start the app).
-          //
-          // Notice that the counter didn't reset back to zero; the application
-          // state is not lost during the reload. To reset the state, use hot
-          // restart instead.
-          //
-          // This works for code too, not just values: Most code changes can be
-          // tested with just a hot reload.
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green.shade900),
           useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.green, brightness: Brightness.light),
+          textTheme: TextTheme(
+            displayLarge: const TextStyle(
+              fontSize: 72,
+              fontWeight: FontWeight.bold,
+            ),
+            // ···
+            titleLarge: GoogleFonts.oswald(
+              fontSize: 30,
+              fontStyle: FontStyle.normal,
+            ),
+            bodyMedium: GoogleFonts.merriweather(),
+            displaySmall: GoogleFonts.pacifico(),
+          ),
         ),
-        home: const MyHomePage(
+        home: const GridViewPage(
           title: 'HKU EVENTEASE',
         ));
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class GridViewPage extends StatefulWidget {
+  const GridViewPage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -52,10 +52,10 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<GridViewPage> createState() => _GridViewPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _GridViewPageState extends State<GridViewPage> {
   int _counter = 0;
 
   void _incrementCounter() {
@@ -79,21 +79,45 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       drawer: Drawer(
-        child: Text("This is a drawer"),
+        child: ListView(
+          // Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            SizedBox(
+              height: 100,
+              child: const DrawerHeader(
+                decoration:
+                    BoxDecoration(color: Color.fromRGBO(76, 175, 80, 1)),
+                child: Text(
+                  'Switch Display Mode',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            ListTile(
+              title: const Text('Grid View'),
+              onTap: () {
+                print("Grid View");
+              },
+            ),
+            ListTile(
+              title: const Text('List View'),
+              onTap: () {
+                print("List View");
+              },
+            ),
+          ],
+        ),
       ),
       appBar: AppBar(
         centerTitle: true,
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.primary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(
           widget.title,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
 
       body: Center(
