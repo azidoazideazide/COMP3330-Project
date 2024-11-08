@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-List<String> fruits = ['apple', 'banana', 'grape', 'orange', 'kiwi'];
-
 void main() {
   runApp(const MyApp());
 }
@@ -11,8 +9,8 @@ class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
-      padding: EdgeInsets.all(16),
+      height: 50,
+      padding: EdgeInsets.all(4),
       child: TextField(
         decoration: InputDecoration(
           labelText: 'Search',
@@ -77,6 +75,8 @@ class GridViewPage extends StatefulWidget {
 class _GridViewPageState extends State<GridViewPage> {
   int _counter = 0;
 
+  final List<String> items = List.generate(100, (index) => 'Item ${index + 1}');
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -86,6 +86,26 @@ class _GridViewPageState extends State<GridViewPage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+  void _showImageInfo(BuildContext context, String imageInfo) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Image Info'),
+          content: Text(imageInfo),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -138,37 +158,31 @@ class _GridViewPageState extends State<GridViewPage> {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-
       body: Center(
         child: Column(
           children: <Widget>[
             SearchBar(),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3, // Number of columns
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return GridTile(
-                    child: Container(
-                      color: Colors.white,
-                      child: Center(
-                        child: Text((index + 1).toString()),
-                      ),
-                    ),
-                  );
-                },
-                itemCount: 100, // Total number of items
+                child: GridView.builder(
+              itemCount: 20,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
               ),
-            )
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () {
+                    _showImageInfo(context, 'Image ${index + 1}');
+                  },
+                  child: Image.asset(
+                    'assets/images/${index + 1}.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                );
+              },
+            )),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
