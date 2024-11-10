@@ -10,6 +10,9 @@
 .svn/
 migrate_working_dir/
 
+# temporarily opened dart files
+lib/temp*.dart
+
 # IntelliJ related
 *.iml
 *.ipr
