@@ -4,6 +4,8 @@
 **HKU EventEase** is a mobile application designed to simplify this process by offering a centralized platform for discovering, browsing and filtering upcoming activities in real-time.
 
 ## Installation
+
+### Flutter App Installation
 1. clone this repo
 2. install flutter SDK by the following guide
    - [Windows](https://docs.flutter.dev/get-started/install/windows/mobile)
@@ -12,6 +14,25 @@
 3. install the flutter dependencies `flutter pub get`
 4. Start a new Android Device (API Level 35) which should have done in the flutter SDK install guide
 5. run the app by `flutter run` or click in the android studio
+
+### Dummy Python API Installation
+1 ensure you have python
+2 get virtual environment
+```
+python3 -m venv env
+```
+3 open a new command line tab, enter virtual environment
+```
+source env/bin/activate
+```
+4 install dependencies for FastAPI 
+```
+pip install -r requirements.txt
+```
+5 run the api
+```
+uvicorn main:app --reload
+```
 
 ## Coding Standards
 
