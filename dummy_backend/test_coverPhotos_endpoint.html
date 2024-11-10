@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test coverPhotos Endpoint</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* Space between items */
+        }
+        .gallery-item {
+            flex: 1 1 calc(33.333% - 20px); /* 3 items per row with gap */
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .event-name {
+            margin-top: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 800px) {
+            .gallery-item {
+                flex: 1 1 calc(50% - 20px); /* 2 items per row */
+            }
+        }
+        @media (max-width: 500px) {
+            .gallery-item {
+                flex: 1 1 100%; /* 1 item per row */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Event Cover Photos</h1>
+    <div class="gallery" id="gallery">
+        <!-- Cover photos will be injected here -->
+    </div>
+
+    <script>
+        // Replace with your FastAPI server URL if different
+        const API_URL = "http://localhost:8000/coverPhotos/";
+
+        // Fetch cover photos from the API
+        fetch(API_URL)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                renderGallery(data);
+            })
+            .catch(error => {
+                console.error("Error fetching cover photos:", error);
+                const gallery = document.getElementById('gallery');
+                gallery.innerHTML = "<p>Failed to load cover photos.</p>";
+            });
+
+        // Function to render the gallery
+        function renderGallery(coverPhotos) {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = ""; // Clear any existing content
+
+            coverPhotos.forEach(photo => {
+                // Create a div for each gallery item
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'gallery-item';
+
+                // Create the image element
+                const img = document.createElement('img');
+                img.src = photo.coverPhotoLink;
+                img.alt = `Cover Photo for Event ID: ${photo.eventId}`;
+                img.onerror = function() {
+                    this.src = 'https://via.placeholder.com/600x400?text=Image+Not+Available';
+                };
+
+                // Optionally, display the Event ID or Event Name (if available)
+                const eventName = getEventName(photo.eventId);
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'event-name';
+                nameDiv.textContent = eventName ? eventName : `Event ID: ${photo.eventId}`;
+
+                // Append elements to the item div
+                itemDiv.appendChild(img);
+                itemDiv.appendChild(nameDiv);
+
+                // Append the item to the gallery
+                gallery.appendChild(itemDiv);
+            });
+        }
+
+        // Function to get the Event Name based on eventId
+        // This requires fetching events_data. To keep it simple, we'll skip this.
+        // Alternatively, you can modify the `/coverPhotos/` endpoint to include event names.
+
+        function getEventName(eventId) {
+            // Placeholder function: returns null. Implement if you have access to event names.
+            return null;
+        }
+    </script>
+</body>
+</html>
