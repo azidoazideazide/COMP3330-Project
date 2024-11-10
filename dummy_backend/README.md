@@ -23,9 +23,7 @@ uvicorn main:app --reload
 usually be `localhost:8000`
 - `localhost:8000/event/{eventId}` for detail view
 - `localhost:8000/events` for list view
-
-### Not Yet Made
-- `localhost:8000/grid` for grid view
+- `localhost:8000/coverPhotos` for grid view
 
 
 ## API docs and specification

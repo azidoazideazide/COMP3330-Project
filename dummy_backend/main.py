@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from uuid import UUID
 from typing import List
 from pydantic import BaseModel
@@ -15,8 +16,28 @@ class Event(BaseModel):
     tagName: str
     registerLink: str
 
+# Define the CoverPhoto model
+class CoverPhoto(BaseModel):
+    eventId: UUID
+    coverPhotoLink: str
+
 # Create the FastAPI app
 app = FastAPI()
+
+# Configure CORS
+origins = [
+    "http://localhost",  # Adjust as needed
+    "http://localhost:8000",  # Adjust as needed
+    # Add other origins if necessary
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins; for production, specify allowed origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Dummy event data
 events_data = [
@@ -122,6 +143,50 @@ events_data = [
     }
 ]
 
+# Dummy cover photos data
+cover_photos_data = [
+    {
+        "eventId": "b71e3f5c-2ed8-4e8c-bb0b-d2ee8f3a5584",
+        "coverPhotoLink": "https://via.placeholder.com/600x400?text=Tech+Talk+2024"
+    },
+    {
+        "eventId": "9a2a4d41-1d4b-4c3b-bf8b-2a6f7a4e753b",
+        "coverPhotoLink": "https://via.placeholder.com/600x400?text=Art+Exhibition"
+    },
+    {
+        "eventId": "c8b0e5f4-2b5f-4f8b-bc29-df0f1b5c5b56",
+        "coverPhotoLink": "https://via.placeholder.com/600x400?text=Startup+Pitch+Night"
+    },
+    {
+        "eventId": "7aa7e6a2-2f3d-4bdd-af8b-2e2b7c4b4221",
+        "coverPhotoLink": "https://via.placeholder.com/600x400?text=Music+Jam"
+    },
+    {
+        "eventId": "dc5e7eec-1c3b-4a9b-ab7d-5f71c6a5f4a6",
+        "coverPhotoLink": "https://via.placeholder.com/600x400?text=Coding+Hackathon"
+    },
+    {
+        "eventId": "e45c6a3d-8d3c-4a9d-9b7f-2c7f4e5a9b5e",
+        "coverPhotoLink": "https://via.placeholder.com/600x400?text=Debate+Championship"
+    },
+    {
+        "eventId": "a2eb5f6b-9b3d-4f8f-b7e1-d2ec6f7b7f6c",
+        "coverPhotoLink": "https://via.placeholder.com/600x400?text=AI+Workshop"
+    },
+    {
+        "eventId": "b4f7a2d0-1c7b-4e8b-bf2b-6e7b4f3a2a6b",
+        "coverPhotoLink": "https://via.placeholder.com/600x400?text=Sports+Meet"
+    },
+    {
+        "eventId": "2f6c5e7b-1d8b-4b8b-8b3b-1e6f3a7a3b5a",
+        "coverPhotoLink": "https://via.placeholder.com/600x400?text=Photography+Contest"
+    },
+    {
+        "eventId": "b7b4c5e6-2e8b-4f3b-9b5b-8e7f3c4d7e6a",
+        "coverPhotoLink": "https://via.placeholder.com/600x400?text=Robotics+Showcase"
+    }
+]
+
 # FastAPI endpoint to get all events
 @app.get("/events", response_model=List[Event])
 async def get_events():
@@ -148,3 +213,11 @@ async def get_event(eventId: UUID):
 
     # If not found, raise a 404 error
     raise HTTPException(status_code=404, detail="Event not found")
+
+# FastAPI endpoint to get all cover photos
+@app.get("/coverPhotos/", response_model=List[CoverPhoto])
+async def get_cover_photos():
+    """
+    Get a list of eventId-coverPhotoLink pair
+    """
+    return cover_photos_data
