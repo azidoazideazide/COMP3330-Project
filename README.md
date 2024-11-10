@@ -16,10 +16,10 @@
 5. run the app by `flutter run` or click in the android studio
 
 ### Dummy Python API Installation
-1 ensure you have python
+1 ensure you have python3
 2 get virtual environment
 ```
-python3 -m venv env
+cd dummy_backend; python -m venv env
 ```
 3 open a new command line tab, enter virtual environment
 ```
