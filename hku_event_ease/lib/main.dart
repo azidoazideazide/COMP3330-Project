@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 void main() {
   runApp(const MyApp());
@@ -186,3 +189,28 @@ class _GridViewPageState extends State<GridViewPage> {
     );
   }
 }
+
+// class ListViewPage extends StatefulWidget {
+//   const ListViewPage({super.key, required this.title});
+//
+//   final String title;
+//
+//   @override
+//   State<ListViewPage> createState() => _ListViewPageState();
+// }
+//
+// class _ListViewPageState extends State<ListViewPage> {
+//   List<dynamic> _items = []; // Will hold the API data
+//   bool _isLoading = true; // State to track if data is being loaded
+//   bool _hasError = false; // State to track if there's an error
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _fetchData(); // Fetch data when the page is initialized
+//   }
+//
+//   Future<void> _fetchData() async {
+//     // fetch the API
+//   }
+// }
