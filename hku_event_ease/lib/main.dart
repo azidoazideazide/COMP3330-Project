@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'details_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -67,6 +68,7 @@ class GridViewPage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  
 
   @override
   State<GridViewPage> createState() => _GridViewPageState();
@@ -88,23 +90,12 @@ class _GridViewPageState extends State<GridViewPage> {
     });
   }
 
-  void _showImageInfo(BuildContext context, String imageInfo) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Image Info'),
-          content: Text(imageInfo),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
+  void _showImageInfo(BuildContext context, int imageId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailsPage(imageId: imageId),
+      ),
     );
   }
 
@@ -153,8 +144,7 @@ class _GridViewPageState extends State<GridViewPage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           widget.title,
-          style:
-              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -163,23 +153,23 @@ class _GridViewPageState extends State<GridViewPage> {
           children: <Widget>[
             SearchBar(),
             Expanded(
-                child: GridView.builder(
-              itemCount: 20,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+              child: GridView.builder(
+                itemCount: 20,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      _showImageInfo(context, index + 1);
+                    },
+                    child: Image.asset(
+                      'assets/images/${index + 1}.jpg',
+                    ),
+                  );
+                },
               ),
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    _showImageInfo(context, 'Image ${index + 1}');
-                  },
-                  child: Image.asset(
-                    'assets/images/${index + 1}.jpg',
-                    fit: BoxFit.cover,
-                  ),
-                );
-              },
-            )),
+            ),
           ],
         ),
       ),
