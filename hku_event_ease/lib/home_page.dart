@@ -4,8 +4,10 @@ import 'grid_view.dart';
 import 'list_view.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
   final String title;
+  // constructor
+  const HomePage({super.key, required this.title});
+  
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -16,6 +18,7 @@ enum ViewType { grid, list }
 class _HomePageState extends State<HomePage> {
   ViewType _currentView = ViewType.grid;
 
+  // Used in the onTap() for each View tab in the Drawer
   void _selectView(ViewType view) {
     setState(() {
       _currentView = view;
@@ -25,6 +28,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    // this part decide which to be the body of home page
     Widget pageBody;
     switch (_currentView) {
       case ViewType.grid:
@@ -35,6 +40,7 @@ class _HomePageState extends State<HomePage> {
         break;
     }
 
+    // This Scaffold has appBar, drawer, and body
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -46,10 +52,13 @@ class _HomePageState extends State<HomePage> {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
+      // Drawer: Side Nav Bar
+      // This Drawer has a SizedBox for title and 2 ListTile to switch ViewType
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
+            // The tiitle box for the drawer (nav bar)
             SizedBox(
               height: 100,
               child: const DrawerHeader(

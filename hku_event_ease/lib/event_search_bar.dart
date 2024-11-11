@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EventSearchBar extends StatelessWidget {
+  const EventSearchBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(

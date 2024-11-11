@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'event_search_bar.dart';
+import 'models/list_view_item.dart';
+import 'api_service.dart';
 
 class ListViewPage extends StatefulWidget {
   const ListViewPage({super.key});
@@ -10,8 +12,11 @@ class ListViewPage extends StatefulWidget {
 }
 
 class _ListViewPageState extends State<ListViewPage> {
-  final List<String> items = List.generate(100, (index) => 'Event ${index + 1}');
+  late Future<List<ListViewItem>> _pendingEventItems;
+  final ApiService apiService = ApiService();
 
+  // Will be removed when the navigation to deatail view is done
+  // now use to showcase each item is clickable
   void _showImageInfo(BuildContext context, String imageInfo) {
     showDialog(
       context: context,
@@ -33,28 +38,63 @@ class _ListViewPageState extends State<ListViewPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    // do the API data fetching at the start of init this page
+    _pendingEventItems = apiService.fetchListViewItems();
+  }
+  
+  // Scroll all the way to the return ListTile part 
+  // ListTile part deal with layout of each event item in list view
+  // TODO:
+  //    1. the compoenet needs to be finalized
+  //    2. the onTap() needs to link with the detailed view 
+  @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         children: <Widget>[
+          // Not sure if the search bar should be separated from the generation of this viewPage
+          // since not sure if there will be difference of its mechanism between listView and gridView 
           EventSearchBar(),
           Expanded(
-            child: ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  leading: Icon(Icons.event),
-                  title: Text(items[index]),
-                  onTap: () {
-                  // Handle list item tap
-                  _showImageInfo(context, 'Event ${index + 1}');
-                  },
-                );
-              },
-            )
+            child: FutureBuilder<List<ListViewItem>>(
+              future: _pendingEventItems,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No events found'));
+                }
+                else {
+                  final eventItems = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: eventItems.length,
+
+                    // This is actually a loop
+                    itemBuilder: (BuildContext context, int index) {
+                      final eventItem = eventItems[index];
+
+                      // Later further finalize the component of a list view item
+                      return ListTile(
+                        leading: Icon(Icons.event),
+                        title: Text(eventItem.eventName),
+                        subtitle: Text('${eventItem.tagName} - ${eventItem.startDateTime}'),
+                        
+                        // Later Implement and link to a detailed view
+                        onTap:() {
+                          _showImageInfo(context, "Later Implement");
+                        }
+                      );
+                    }
+                  );
+                }
+              }
+            ),
           ),
         ],
-      ),
+      )
     );
   }
 }

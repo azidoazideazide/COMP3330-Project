@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hku_event_ease/home_page.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
-import 'list_view.dart';
-import 'grid_view.dart';
+import 'home_page.dart';
 
 const String appTitle = 'HKU EventEase';
 
@@ -15,7 +11,9 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
+  // MyApp is a MaterialApp,
+  //  containing title, theme, and home
+  //  detail of home is separated to 'home_page.dart'
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
