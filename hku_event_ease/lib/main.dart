@@ -20,10 +20,13 @@ class MyApp extends StatelessWidget {
       title: appTitle,
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green, brightness: Brightness.light),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.green, brightness: Brightness.light),
         textTheme: TextTheme(
-          displayLarge: const TextStyle(fontSize: 72, fontWeight: FontWeight.bold),
-          titleLarge: GoogleFonts.oswald(fontSize: 30, fontStyle: FontStyle.normal),
+          displayLarge:
+              const TextStyle(fontSize: 72, fontWeight: FontWeight.bold),
+          titleLarge:
+              GoogleFonts.oswald(fontSize: 30, fontStyle: FontStyle.normal),
           bodyMedium: GoogleFonts.merriweather(),
           displaySmall: GoogleFonts.pacifico(),
         ),

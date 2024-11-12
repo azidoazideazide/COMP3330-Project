@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'event_search_bar.dart';
+import 'models/grid_view_item.dart';
+import 'api_service.dart';
 
 class GridViewPage extends StatefulWidget {
   const GridViewPage({super.key});
@@ -10,8 +12,10 @@ class GridViewPage extends StatefulWidget {
 }
 
 class _GridViewPageState extends State<GridViewPage> {
-  final List<String> items = List.generate(100, (index) => 'Item ${index + 1}');
+  late Future<List<GridViewItem>> _pendingEventItems;
+  final ApiService apiService = ApiService();
 
+  // placeholder function. Should be replaced by a show event detail page
   void _showImageInfo(BuildContext context, String imageInfo) {
     showDialog(
       context: context,
@@ -30,6 +34,13 @@ class _GridViewPageState extends State<GridViewPage> {
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // do the API data fetching at the start of init this page
+    _pendingEventItems = apiService.fetchGridViewItems();
   }
 
   @override

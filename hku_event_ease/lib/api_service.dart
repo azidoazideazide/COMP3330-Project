@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'models/list_view_item.dart';
+import 'models/grid_view_item.dart';
 
 class ApiService {
   final String baseUrl;
@@ -12,17 +15,49 @@ class ApiService {
   Future<List<ListViewItem>> fetchListViewItems() async {
     final response = await http.get(Uri.parse('$baseUrl/events'));
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
       return data.map((e) => ListViewItem.fromJson(e)).toList();
-    } 
-    else {
+    } else {
       throw Exception('Failed to fetch data from $baseUrl/events');
     }
   }
 
-  // Future<List<GridViewItem>> fetchGridViewItems() async
-  // }
+  Future<List<GridViewItem>> fetchGridViewItems() async {
+    print('fetching grid view items');
+
+    final events = await http.get(Uri.parse('$baseUrl/events'));
+    List<dynamic> eventData;
+    List<dynamic> coverPhotoData;
+
+    if (events.statusCode == 200) {
+      eventData = jsonDecode(events.body);
+    } else {
+      throw Exception('Failed to fetch data from $baseUrl/events');
+    }
+
+    final coverPhotos = await http.get(Uri.parse('$baseUrl/coverPhotos'));
+
+    if (coverPhotos.statusCode == 200) {
+      coverPhotoData = jsonDecode(coverPhotos.body);
+    } else {
+      throw Exception('Failed to fetch data from $baseUrl/coverPhotos');
+    }
+
+    // combine eventData and coverPhotoData by eventId
+    for (var event in eventData) {
+      for (var coverPhoto in coverPhotoData) {
+        if (event['eventId'] == coverPhoto['eventId']) {
+          event['coverPhotoLink'] = coverPhoto['coverPhotoLink'];
+          break;
+        }
+      }
+    }
+
+    print(eventData);
+
+    return eventData.map((e) => GridViewItem.fromJson(e)).toList();
+  }
 
   // Future<DetailViewItem> fetchDetailViewItem() async{
   //}
