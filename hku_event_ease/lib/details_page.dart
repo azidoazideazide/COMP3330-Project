@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'services/fetch.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'models/list_view_item.dart';
+import 'services/api_service.dart';
 
 class DetailsPage extends StatefulWidget {
-  final int imageId;
+  final String imageId;
 
   DetailsPage({required this.imageId});
 
@@ -11,12 +14,13 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  late Future<Map<String, dynamic>> _imageData;
+  late Future<ListViewItem> _imageData;
+  final ApiService apiService = ApiService();
 
   @override
   void initState() {
     super.initState();
-    _imageData = loadJsonData();
+    _imageData = apiService.fetchDetailViewItem(widget.imageId);
   }
 
   @override
@@ -25,27 +29,39 @@ class _DetailsPageState extends State<DetailsPage> {
       appBar: AppBar(
         title: Text('Image Details'),
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
+      body: FutureBuilder<ListViewItem>(
         future: _imageData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          } else if (!snapshot.hasData) {
             return Center(child: Text('No data found'));
           } else {
             final imageInfo = snapshot.data!;
-            return ListView.builder(
-              itemCount: imageInfo.length,
-              itemBuilder: (context, index) {
-                final key = imageInfo.keys.elementAt(index);
-                final value = imageInfo[key];
-                return ListTile(
-                  title: Text('Image $key'),
-                  subtitle: Text(value.toString()),
-                );
-              },
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/images/1.jpg'),
+                  SizedBox(height: 20),
+                  Text(
+                    'Details for Image ${widget.imageId}',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Title: ${imageInfo.eventName}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Description: ${imageInfo.tagName} - ${imageInfo.startDateTime}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              ),
             );
           }
         },
