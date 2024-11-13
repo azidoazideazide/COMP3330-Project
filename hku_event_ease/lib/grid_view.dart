@@ -50,23 +50,36 @@ class _GridViewPageState extends State<GridViewPage> {
         children: <Widget>[
           EventSearchBar(),
           Expanded(
-              child: GridView.builder(
-            itemCount: 20,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-            ),
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () {
-                  _showImageInfo(context, 'Image ${index + 1}');
-                },
-                child: Image.asset(
-                  'assets/images/${index + 1}.jpg',
-                  fit: BoxFit.cover,
-                ),
-              );
-            },
-          )),
+              child: FutureBuilder(
+                  future: _pendingEventItems,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text('No events found'));
+                    } else {
+                      final eventItems = snapshot.data!;
+                      return GridView.builder(
+                        itemCount: eventItems.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          final eventItem = eventItems[index];
+
+                          return GestureDetector(
+                            // Later Implement and link to a detailed view
+                            onTap: () {
+                              _showImageInfo(context, eventItem.eventName);
+                            },
+
+                            child: Image.network(eventItem.coverPhotoLink,
+                                fit: BoxFit.contain),
+                          );
+                        },
+                      );
+                    }
+                  })),
         ],
       ),
     );

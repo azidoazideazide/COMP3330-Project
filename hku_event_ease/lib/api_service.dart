@@ -1,4 +1,4 @@
-import 'dart:math';
+//import 'dart:math';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -10,7 +10,7 @@ class ApiService {
   final String baseUrl;
   // will be changed to real one later on
   // real one will then be put in .env ?
-  ApiService({this.baseUrl = 'http://localhost:8000'});
+  ApiService({this.baseUrl = 'http://10.0.2.2:8000'});
 
   Future<List<ListViewItem>> fetchListViewItems() async {
     final response = await http.get(Uri.parse('$baseUrl/events'));
@@ -24,12 +24,10 @@ class ApiService {
   }
 
   Future<List<GridViewItem>> fetchGridViewItems() async {
-    print('fetching grid view items');
-
-    final events = await http.get(Uri.parse('$baseUrl/events'));
     List<dynamic> eventData;
     List<dynamic> coverPhotoData;
 
+    final events = await http.get(Uri.parse('$baseUrl/events'));
     if (events.statusCode == 200) {
       eventData = jsonDecode(events.body);
     } else {
@@ -37,7 +35,6 @@ class ApiService {
     }
 
     final coverPhotos = await http.get(Uri.parse('$baseUrl/coverPhotos'));
-
     if (coverPhotos.statusCode == 200) {
       coverPhotoData = jsonDecode(coverPhotos.body);
     } else {
@@ -53,8 +50,6 @@ class ApiService {
         }
       }
     }
-
-    print(eventData);
 
     return eventData.map((e) => GridViewItem.fromJson(e)).toList();
   }
