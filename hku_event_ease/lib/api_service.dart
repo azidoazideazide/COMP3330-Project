@@ -7,7 +7,7 @@ class ApiService {
   final String baseUrl;
   // will be changed to real one later on
   // real one will then be put in .env ?
-  ApiService({this.baseUrl = 'http://<IPV4>:8000'}); //please enter your own ipv4
+  ApiService({this.baseUrl = 'http://10.0.2.2:8000'}); //please enter your own ipv4
 
   Future<List<ListViewItem>> fetchListViewItems() async {
     final response = await http.get(Uri.parse('$baseUrl/events'));
