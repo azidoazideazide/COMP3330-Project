@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'details_page.dart';
 import 'event_search_bar.dart';
 import 'models/grid_view_item.dart';
 import 'services/api_service.dart';
@@ -16,23 +16,12 @@ class _GridViewPageState extends State<GridViewPage> {
   final ApiService apiService = ApiService();
 
   // placeholder function. Should be replaced by a show event detail page
-  void _showImageInfo(BuildContext context, String imageInfo) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Image Info'),
-          content: Text(imageInfo),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
+  void _navigateToDetailsPage(BuildContext context, String eventId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailsPage(imageId: eventId),
+      ),
     );
   }
 
@@ -70,7 +59,7 @@ class _GridViewPageState extends State<GridViewPage> {
                           return GestureDetector(
                             // Later Implement and link to a detailed view
                             onTap: () {
-                              _showImageInfo(context, eventItem.eventName);
+                              _navigateToDetailsPage(context, eventItem.eventId);
                             },
 
                             child: Image.network(eventItem.coverPhotoLink,
