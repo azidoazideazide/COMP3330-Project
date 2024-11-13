@@ -65,11 +65,6 @@ class _DetailsPageState extends State<DetailsPage> {
                   Image.asset('assets/images/1.jpg'),
                   SizedBox(height: 20),
                   Text(
-                    'Details for Image ${widget.imageId}',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
                     'Title: ${imageInfo.eventName}',
                     style: TextStyle(fontSize: 18),
                   ),
