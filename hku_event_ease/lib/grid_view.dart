@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'event_search_bar.dart';
 import 'models/grid_view_item.dart';
-import 'api_service.dart';
+import 'services/api_service.dart';
 
 class GridViewPage extends StatefulWidget {
   const GridViewPage({super.key});

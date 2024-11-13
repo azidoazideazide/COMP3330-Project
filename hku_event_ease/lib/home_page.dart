@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
         pageBody = const GridViewPage();
         break;
       case ViewType.list:
-        pageBody = const ListViewPage();
+        pageBody = ListViewPage();
         break;
     }
 
