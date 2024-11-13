@@ -62,7 +62,10 @@ class _DetailsPageState extends State<DetailsPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/images/1.jpg'),
+                    Image.network(
+                    imageInfo.coverPhotoLink,
+                    fit: BoxFit.contain,
+                    ),
                   SizedBox(height: 20),
                   Text(
                     'Title: ${imageInfo.eventName}',
@@ -81,6 +84,11 @@ class _DetailsPageState extends State<DetailsPage> {
                   SizedBox(height: 10),
                   Text(
                     'Start Time: ${imageInfo.startDateTime}',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Start Time: ${imageInfo.endDateTime}',
                     style: TextStyle(fontSize: 18),
                   ),
                   SizedBox(height: 20),

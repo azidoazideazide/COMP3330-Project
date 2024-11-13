@@ -26,6 +26,18 @@ class ApiService {
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       data['endDateTime'] = data['endDateTime'] ?? DateTime.parse(data['startDateTime']).add(Duration(hours: 1)).toIso8601String();
+      final photosResponse = await http.get(Uri.parse('$baseUrl/coverPhotos'));
+      if (photosResponse.statusCode == 200) {
+      List<dynamic> photosData = jsonDecode(photosResponse.body);
+      for (var photo in photosData) {
+        if (photo['eventId'] == id) {
+          data['coverPhotoLink'] = photo['coverPhotoLink'];
+          break;
+        }
+      }
+      } else {
+        throw Exception('Failed to fetch photos from $baseUrl/coverPhotos');
+      }
       return DetailViewItem.fromJson(data);
     } else {
       throw Exception('Failed to fetch data from $baseUrl/event/$id');

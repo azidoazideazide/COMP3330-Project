@@ -1,5 +1,6 @@
 class DetailViewItem {  
   final String eventId;
+  final String coverPhotoLink;
   final String eventName;
   final String organizerName;
   final String venue;
@@ -10,6 +11,7 @@ class DetailViewItem {
 
   DetailViewItem({
     required this.eventId,
+    required this.coverPhotoLink,
     required this.eventName,
     required this.organizerName,
     required this.venue,
@@ -22,6 +24,7 @@ class DetailViewItem {
   factory DetailViewItem.fromJson(Map<String, dynamic> json) {
     return DetailViewItem(
       eventId: json['eventId'],
+      coverPhotoLink: json['coverPhotoLink'],
       eventName: json['eventName'],
       organizerName: json['organizerName'],
       venue: json['venue'],
