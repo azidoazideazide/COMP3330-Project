@@ -105,7 +105,7 @@ class _ListViewPageState extends State<ListViewPage> {
                         
                         // Later Implement and link to a detailed view
                         onTap:() {
-                          _showImageInfo(context, "Later Implement");
+                          _navigateToDetailsPage(context, eventItem.eventId);
                         }
                       );
                     }
