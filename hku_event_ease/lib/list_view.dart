@@ -3,6 +3,7 @@ import 'details_page.dart';
 import 'services/api_service.dart';
 import 'models/list_view_item.dart';
 import 'event_search_bar.dart';
+import 'package:intl/intl.dart';
 
 class ListViewPage extends StatefulWidget {
   @override
@@ -136,6 +137,16 @@ class _ListViewPageState extends State<ListViewPage> {
                 children: _selectedTag.isEmpty
                     ? _tags.entries.map((entry) => _buildTag(entry.key, entry.value)).toList()
                     : [_buildTag(_selectedTag, _tags[_selectedTag]!)],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
+              child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                DateFormat('EEEE, d MMMM, yyyy').format(DateTime.now()),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               ),
             ),
             Expanded(
