@@ -14,33 +14,37 @@ class _ListViewPageState extends State<ListViewPage> {
   final ApiService apiService = ApiService();
   List<ListViewItem> _filteredEventItems = [];
   String _searchQuery = '';
+  String _selectedTag = '';
 
-  // Will be removed when the navigation to deatail view is done
-  // now use to showcase each item is clickable
-  void _showImageInfo(BuildContext context, String imageInfo) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Image Info'),
-          content: Text(imageInfo),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  final Map<String, Color> _tags = {
+    'Sports': Colors.blueAccent,
+    'Seminars': Colors.greenAccent,
+    'Workshops': Colors.orangeAccent,
+    'Clubs': Colors.purpleAccent,
+    'Music': Colors.redAccent,
+    'Networking': Colors.green,
+    'Technology': Colors.cyanAccent,
+    'Art': Colors.pinkAccent,
+  };
 
   @override
   void initState() {
     super.initState();
     _pendingEventItems = apiService.fetchListViewItems();
+    _pendingEventItems.then((items) {
+      setState(() {
+        _filteredEventItems = items;
+      });
+    });
+  }
+
+  void _navigateToDetailsPage(BuildContext context, String eventId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailsPage(imageId: eventId),
+      ),
+    );
   }
 
   void _filterEvents(String query) {
@@ -54,67 +58,118 @@ class _ListViewPageState extends State<ListViewPage> {
       });
     });
   }
-  
-  // Scroll all the way to the return ListTile part 
-  // ListTile part deal with layout of each event item in list view
-  // TODO:
-  //    1. the compoenet needs to be finalized
-  //    2. the onTap() needs to link with the detailed view 
 
-  void _navigateToDetailsPage(BuildContext context, String imageId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DetailsPage(imageId: imageId),
+  void _filterByTag(String tag) {
+    setState(() {
+      _selectedTag = tag;
+      _pendingEventItems.then((items) {
+        _filteredEventItems = items.where((item) {
+          return item.tagName.toLowerCase() == tag.toLowerCase();
+        }).toList();
+      });
+    });
+  }
+
+  void _resetTagFilter() {
+    setState(() {
+      _selectedTag = '';
+      _pendingEventItems.then((items) {
+        _filteredEventItems = items;
+      });
+    });
+  }
+
+  // Method to build the tag widgets
+  Widget _buildTag(String tag, Color color) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () {
+          _filterByTag(tag);
+        },
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 4.0),
+          padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                tag,
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              if (_selectedTag == tag)
+                GestureDetector(
+                  onTap: () {
+                    _resetTagFilter();
+                  },
+                  child: Icon(
+                    Icons.cancel,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          // Not sure if the search bar should be separated from the generation of this viewPage
-          // since not sure if there will be difference of its mechanism between listView and gridView 
-          EventSearchBar(onSearch: _filterEvents),
-          Expanded(
-            child: FutureBuilder<List<ListViewItem>>(
-              future: _pendingEventItems,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No events found'));
-                }
-                else {
-                  final eventItems = _searchQuery.isEmpty ? snapshot.data! : _filteredEventItems;
-                  return ListView.builder(
-                    itemCount: eventItems.length,
-
-                    // This is actually a loop
-                    itemBuilder: (BuildContext context, int index) {
-                      final eventItem = eventItems[index];
-
-                      // Later further finalize the component of a list view item
-                      return ListTile(
-                        leading: Icon(Icons.event),
-                        title: Text(eventItem.eventName),
-                        subtitle: Text('${eventItem.tagName} - ${eventItem.startDateTime}'),
-                        
-                        onTap:() {
-                          _navigateToDetailsPage(context, eventItem.eventId);
-                        }
-                      );
-                    }
-                  );
-                }
-              }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('List View'),
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            EventSearchBar(onSearch: _filterEvents),
+            // Tags Row
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: _selectedTag.isEmpty
+                    ? _tags.entries.map((entry) => _buildTag(entry.key, entry.value)).toList()
+                    : [_buildTag(_selectedTag, _tags[_selectedTag]!)],
+              ),
             ),
-          ),
-        ],
-      )
+            Expanded(
+              child: FutureBuilder<List<ListViewItem>>(
+                future: _pendingEventItems,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No events found'));
+                  } else {
+                    final eventItems = _searchQuery.isEmpty && _selectedTag.isEmpty
+                        ? snapshot.data!
+                        : _filteredEventItems;
+                    return ListView.builder(
+                      itemCount: eventItems.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final eventItem = eventItems[index];
+                        return ListTile(
+                          title: Text(eventItem.eventName),
+                          subtitle: Text('${eventItem.tagName} - ${eventItem.startDateTime}'),
+                          onTap: () {
+                            _navigateToDetailsPage(context, eventItem.eventId);
+                          },
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
