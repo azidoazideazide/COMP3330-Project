@@ -14,6 +14,8 @@ class ListViewPage extends StatefulWidget {
 class _ListViewPageState extends State<ListViewPage> {
   late Future<List<ListViewItem>> _pendingEventItems;
   final ApiService apiService = ApiService();
+  List<ListViewItem> _filteredEventItems = [];
+  String _searchQuery = '';
 
   // Will be removed when the navigation to deatail view is done
   // now use to showcase each item is clickable
@@ -43,6 +45,18 @@ class _ListViewPageState extends State<ListViewPage> {
     // do the API data fetching at the start of init this page
     _pendingEventItems = apiService.fetchListViewItems();
   }
+
+  void _filterEvents(String query) {
+    setState(() {
+      _searchQuery = query;
+      _pendingEventItems.then((items) {
+        _filteredEventItems = items.where((item) {
+          return item.eventName.toLowerCase().contains(query.toLowerCase()) ||
+                 item.tagName.toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      });
+    });
+  }
   
   // Scroll all the way to the return ListTile part 
   // ListTile part deal with layout of each event item in list view
@@ -56,7 +70,7 @@ class _ListViewPageState extends State<ListViewPage> {
         children: <Widget>[
           // Not sure if the search bar should be separated from the generation of this viewPage
           // since not sure if there will be difference of its mechanism between listView and gridView 
-          EventSearchBar(),
+          EventSearchBar(onSearch: _filterEvents),
           Expanded(
             child: FutureBuilder<List<ListViewItem>>(
               future: _pendingEventItems,
@@ -68,7 +82,7 @@ class _ListViewPageState extends State<ListViewPage> {
                   return const Center(child: Text('No events found'));
                 }
                 else {
-                  final eventItems = snapshot.data!;
+                  final eventItems = _searchQuery.isEmpty ? snapshot.data! : _filteredEventItems;
                   return ListView.builder(
                     itemCount: eventItems.length,
 
