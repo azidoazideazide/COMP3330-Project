@@ -37,6 +37,8 @@ dependencies:
   google_fonts: ^6.2.1
   http: ^1.2.2
   add_2_calendar: ^3.0.1
+  shared_preferences: ^2.0.15
+
 
 dev_dependencies:
   flutter_test:

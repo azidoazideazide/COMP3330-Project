@@ -3,6 +3,8 @@ import 'details_page.dart';
 import 'services/api_service.dart';
 import 'models/list_view_item.dart';
 import 'event_search_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class ListViewPage extends StatefulWidget {
   @override
@@ -31,6 +33,7 @@ class _ListViewPageState extends State<ListViewPage> {
   void initState() {
     super.initState();
     _pendingEventItems = apiService.fetchListViewItems();
+    _loadFavorites();
     _pendingEventItems.then((items) {
       setState(() {
         _filteredEventItems = items;
@@ -119,6 +122,45 @@ class _ListViewPageState extends State<ListViewPage> {
     );
   }
 
+      // Toggle favorite status and store it
+  Future<void> _toggleFavorite(ListViewItem item) async {
+    setState(() {
+      item.isFavorite = !item.isFavorite;
+    });
+    await _saveFavorites();
+  }
+
+  // Save favorite items to SharedPreferences
+  Future<void> _saveFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final favorites = _pendingEventItems.then((items) =>
+        items.where((item) => item.isFavorite).map((e) => e.toJson()).toList());
+    prefs.setString('favoriteEvents', jsonEncode(await favorites));
+    //debug
+    //print("Saved favorites: ${prefs.getString('favoriteEvents')}");
+  }
+
+  // Load favorite items from SharedPreferences
+  Future<void> _loadFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final favoriteJson = prefs.getString('favoriteEvents') ?? '[]';
+    final List<dynamic> favoriteList = jsonDecode(favoriteJson);
+    final favoriteItems = favoriteList.map((json) => ListViewItem.fromJson(json)).toList();
+    //debug
+    //print("Loaded favorites: $favoriteItems");
+
+    // Wait for _pendingEventItems to complete and get the list of items
+    final eventItems = await _pendingEventItems;
+
+    setState(() {
+      for (var item in favoriteItems) {
+        // Find the index of the favorite item in the fetched list
+        final index = eventItems.indexWhere((e) => e.eventName == item.eventName);
+        if (index != -1) eventItems[index].isFavorite = true;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,6 +199,13 @@ class _ListViewPageState extends State<ListViewPage> {
                         return ListTile(
                           title: Text(eventItem.eventName),
                           subtitle: Text('${eventItem.tagName} - ${eventItem.startDateTime}'),
+                          trailing: IconButton(
+                          icon: Icon(
+                            eventItem.isFavorite ? Icons.favorite : Icons.favorite_border,
+                          ),
+                          color: eventItem.isFavorite ? Colors.red : Colors.grey,
+                          onPressed: () => _toggleFavorite(eventItem),
+                        ),
                           onTap: () {
                             _navigateToDetailsPage(context, eventItem.eventId);
                           },

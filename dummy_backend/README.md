@@ -18,7 +18,8 @@ source env/bin/activate
 ```
 (Windows)
 ```
-.venv\Scripts\activate
+Set-ExecutionPolicy RemoteSigned
+.\env\Scripts\Activate
 ```
 4 install dependencies for FastAPI 
 ```

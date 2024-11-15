@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'grid_view.dart';
 import 'list_view.dart';
+import 'fav_view.dart';
 
 class HomePage extends StatefulWidget {
   final String title;
@@ -13,7 +14,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-enum ViewType { grid, list }
+enum ViewType { grid, list, favorite}
 
 class _HomePageState extends State<HomePage> {
   ViewType _currentView = ViewType.grid;
@@ -37,6 +38,9 @@ class _HomePageState extends State<HomePage> {
         break;
       case ViewType.list:
         pageBody = ListViewPage();
+        break;
+      case ViewType.favorite:
+        pageBody = const FavView(); // Add FavView as an option
         break;
     }
 
@@ -77,6 +81,10 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               title: const Text('List View'),
               onTap: () => _selectView(ViewType.list),
+            ),
+            ListTile(
+              title: const Text('Favorite View'), // Add Favorite View option
+              onTap: () => _selectView(ViewType.favorite),
             ),
           ],
         ),
