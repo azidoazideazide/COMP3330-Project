@@ -14,7 +14,21 @@ class GridViewPage extends StatefulWidget {
 class _GridViewPageState extends State<GridViewPage> {
   late Future<List<GridViewItem>> _pendingEventItems;
   final ApiService apiService = ApiService();
+  List<GridViewItem> _filteredEventItems = [];
+  String _searchQuery = '';
 
+
+  void _filterEvents(String query) {
+    setState(() {
+      _searchQuery = query;
+      _pendingEventItems.then((items) {
+        _filteredEventItems = items.where((item) {
+          return item.eventName.toLowerCase().contains(query.toLowerCase()) ||
+                 item.tagName.toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      });
+    });
+  }
   // placeholder function. Should be replaced by a show event detail page
   void _navigateToDetailsPage(BuildContext context, String eventId) {
     Navigator.push(
@@ -37,7 +51,7 @@ class _GridViewPageState extends State<GridViewPage> {
     return Center(
       child: Column(
         children: <Widget>[
-          EventSearchBar(),
+          EventSearchBar(onSearch: _filterEvents),
           Expanded(
               child: FutureBuilder(
                   future: _pendingEventItems,
@@ -47,7 +61,7 @@ class _GridViewPageState extends State<GridViewPage> {
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Center(child: Text('No events found'));
                     } else {
-                      final eventItems = snapshot.data!;
+                      final eventItems = _searchQuery.isEmpty ? snapshot.data! : _filteredEventItems;
                       return GridView.builder(
                         itemCount: eventItems.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class EventSearchBar extends StatelessWidget {
-  const EventSearchBar({super.key});
+  final ValueChanged<String> onSearch;
+
+  const EventSearchBar({super.key, required this.onSearch});
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +16,7 @@ class EventSearchBar extends StatelessWidget {
           border: OutlineInputBorder(),
           prefixIcon: Icon(Icons.search),
         ),
+        onChanged: onSearch,
       ),
     );
   }
