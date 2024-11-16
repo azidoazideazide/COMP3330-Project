@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'details_page.dart';
 import 'services/api_service.dart';
+import 'package:intl/intl.dart';
 import 'models/list_view_item.dart';
 import 'event_search_bar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
+import 'event_list.dart';
 
 class ListViewPage extends StatefulWidget {
   @override
@@ -33,7 +32,6 @@ class _ListViewPageState extends State<ListViewPage> {
   void initState() {
     super.initState();
     _pendingEventItems = apiService.fetchListViewItems();
-    _loadFavorites();
     _pendingEventItems.then((items) {
       setState(() {
         _filteredEventItems = items;
@@ -41,35 +39,22 @@ class _ListViewPageState extends State<ListViewPage> {
     });
   }
 
-  void _navigateToDetailsPage(BuildContext context, String eventId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DetailsPage(imageId: eventId),
-      ),
-    );
-  }
-
   void _filterEvents(String query) {
     setState(() {
       _searchQuery = query;
-      _pendingEventItems.then((items) {
-        _filteredEventItems = items.where((item) {
-          return item.eventName.toLowerCase().contains(query.toLowerCase()) ||
-                 item.tagName.toLowerCase().contains(query.toLowerCase());
-        }).toList();
-      });
+      _filteredEventItems = _filteredEventItems.where((item) {
+        return item.eventName.toLowerCase().contains(query.toLowerCase()) ||
+               item.tagName.toLowerCase().contains(query.toLowerCase());
+      }).toList();
     });
   }
 
   void _filterByTag(String tag) {
     setState(() {
       _selectedTag = tag;
-      _pendingEventItems.then((items) {
-        _filteredEventItems = items.where((item) {
-          return item.tagName.toLowerCase() == tag.toLowerCase();
-        }).toList();
-      });
+      _filteredEventItems = _filteredEventItems.where((item) {
+        return item.tagName.toLowerCase() == tag.toLowerCase();
+      }).toList();
     });
   }
 
@@ -80,6 +65,62 @@ class _ListViewPageState extends State<ListViewPage> {
         _filteredEventItems = items;
       });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Latest Events'),
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            EventSearchBar(onSearch: _filterEvents),
+            // Tags Row
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: _selectedTag.isEmpty
+                    ? _tags.entries.map((entry) => _buildTag(entry.key, entry.value)).toList()
+                    : [_buildTag(_selectedTag, _tags[_selectedTag]!)],
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                DateFormat('EEEE, d MMMM, yyyy').format(DateTime.now()),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              ),
+            ),
+            Expanded(
+              child: FutureBuilder<List<ListViewItem>>(
+                future: _pendingEventItems,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No events found'));
+                  } else {
+                    final eventItems = _searchQuery.isEmpty && _selectedTag.isEmpty
+                        ? snapshot.data!
+                        : _filteredEventItems;
+                    return EventList(
+                      eventItems: eventItems,
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   // Method to build the tag widgets
@@ -117,106 +158,6 @@ class _ListViewPageState extends State<ListViewPage> {
                 ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-      // Toggle favorite status and store it
-  Future<void> _toggleFavorite(ListViewItem item) async {
-    setState(() {
-      item.isFavorite = !item.isFavorite;
-    });
-    await _saveFavorites();
-  }
-
-  // Save favorite items to SharedPreferences
-  Future<void> _saveFavorites() async {
-    final prefs = await SharedPreferences.getInstance();
-    final favorites = _pendingEventItems.then((items) =>
-        items.where((item) => item.isFavorite).map((e) => e.toJson()).toList());
-    prefs.setString('favoriteEvents', jsonEncode(await favorites));
-    //debug
-    //print("Saved favorites: ${prefs.getString('favoriteEvents')}");
-  }
-
-  // Load favorite items from SharedPreferences
-  Future<void> _loadFavorites() async {
-    final prefs = await SharedPreferences.getInstance();
-    final favoriteJson = prefs.getString('favoriteEvents') ?? '[]';
-    final List<dynamic> favoriteList = jsonDecode(favoriteJson);
-    final favoriteItems = favoriteList.map((json) => ListViewItem.fromJson(json)).toList();
-    //debug
-    //print("Loaded favorites: $favoriteItems");
-
-    // Wait for _pendingEventItems to complete and get the list of items
-    final eventItems = await _pendingEventItems;
-
-    setState(() {
-      for (var item in favoriteItems) {
-        // Find the index of the favorite item in the fetched list
-        final index = eventItems.indexWhere((e) => e.eventName == item.eventName);
-        if (index != -1) eventItems[index].isFavorite = true;
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('List View'),
-      ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            EventSearchBar(onSearch: _filterEvents),
-            // Tags Row
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: _selectedTag.isEmpty
-                    ? _tags.entries.map((entry) => _buildTag(entry.key, entry.value)).toList()
-                    : [_buildTag(_selectedTag, _tags[_selectedTag]!)],
-              ),
-            ),
-            Expanded(
-              child: FutureBuilder<List<ListViewItem>>(
-                future: _pendingEventItems,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('No events found'));
-                  } else {
-                    final eventItems = _searchQuery.isEmpty && _selectedTag.isEmpty
-                        ? snapshot.data!
-                        : _filteredEventItems;
-                    return ListView.builder(
-                      itemCount: eventItems.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final eventItem = eventItems[index];
-                        return ListTile(
-                          title: Text(eventItem.eventName),
-                          subtitle: Text('${eventItem.tagName} - ${eventItem.startDateTime}'),
-                          trailing: IconButton(
-                          icon: Icon(
-                            eventItem.isFavorite ? Icons.favorite : Icons.favorite_border,
-                          ),
-                          color: eventItem.isFavorite ? Colors.red : Colors.grey,
-                          onPressed: () => _toggleFavorite(eventItem),
-                        ),
-                          onTap: () {
-                            _navigateToDetailsPage(context, eventItem.eventId);
-                          },
-                        );
-                      },
-                    );
-                  }
-                },
-              ),
-            ),
-          ],
         ),
       ),
     );

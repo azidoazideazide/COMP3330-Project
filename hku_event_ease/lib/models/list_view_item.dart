@@ -1,15 +1,19 @@
 class ListViewItem {
   final String eventId;
   final String eventName;
+  final String organizerName;
   final String tagName;
   final DateTime startDateTime;
+  final String coverPhotoLink;
   bool isFavorite;
 
 ListViewItem({
     required this.eventId,
     required this.eventName,
+    required this.organizerName,
     required this.tagName,
     required this.startDateTime,
+    required this.coverPhotoLink,
     this.isFavorite = false, // default to not favorite
   });
 
@@ -18,8 +22,10 @@ ListViewItem({
     return {
       'eventId': eventId,
       'eventName': eventName,
+      'organizerName': organizerName,
       'tagName': tagName,
       'startDateTime': startDateTime.toIso8601String(),
+      'coverPhotoLink': coverPhotoLink,
       'isFavorite': isFavorite,
     };
   }
@@ -28,8 +34,10 @@ ListViewItem({
     return ListViewItem(
       eventId: json['eventId'],
       eventName: json['eventName'],
+      organizerName: json['organizerName'],
       tagName: json['tagName'],
       startDateTime: DateTime.parse(json['startDateTime']),
+      coverPhotoLink: json['coverPhotoLink'],
       isFavorite: json['isFavorite'] ?? false,
     );
   }
