@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:add_2_calendar/add_2_calendar.dart';
-import 'services/api_service.dart';
-import 'models/detail_view_item.dart';
-import 'models/favorite_item.dart';
+import '../services/api_service.dart';
+import '../models/detail_view_item.dart';
+import '../models/favorite_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 

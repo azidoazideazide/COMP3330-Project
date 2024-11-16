@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'event_list.dart';
+import '../event_list.dart';
 
 class FavoriteViewPage extends StatelessWidget {
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'list_view.dart';
-import 'grid_view.dart';
-import 'fav_view.dart';
+import 'pages/list_view.dart';
+import 'pages/grid_view.dart';
+import 'pages/fav_view.dart';
 
 class HomePage extends StatefulWidget {
   final String title;

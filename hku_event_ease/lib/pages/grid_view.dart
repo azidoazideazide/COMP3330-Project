@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'details_page.dart';
-import 'event_search_bar.dart';
-import 'models/grid_view_item.dart';
-import 'services/api_service.dart';
+import '../event_search_bar.dart';
+import '../models/grid_view_item.dart';
+import '../services/api_service.dart';
 
 class GridViewPage extends StatefulWidget {
   const GridViewPage({super.key});

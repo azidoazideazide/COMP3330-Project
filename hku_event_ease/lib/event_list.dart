@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'models/list_view_item.dart';
 import '../models/favorite_item.dart';
-import 'details_page.dart';
+import 'pages/details_page.dart';
 import 'services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
