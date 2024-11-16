@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           displaySmall: GoogleFonts.pacifico(),
         ),
       ),
-      home: const HomePage(title: appTitle),
+      home: HomePage(title: appTitle),
     );
   }
 }
