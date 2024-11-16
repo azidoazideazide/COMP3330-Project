@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
 import 'details_page.dart';
 import 'event_search_bar.dart';
 import 'models/grid_view_item.dart';

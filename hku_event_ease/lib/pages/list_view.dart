@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'event_search_bar.dart';
-import 'event_list.dart';
+import '../event_search_bar.dart';
+import '../event_list.dart';
 
 class ListViewPage extends StatefulWidget {
   @override
