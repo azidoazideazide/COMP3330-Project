@@ -18,14 +18,9 @@ ListViewItem({
   });
 
     // Method to convert the object to JSON
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toFavoriteJson() {
     return {
       'eventId': eventId,
-      'eventName': eventName,
-      'organizerName': organizerName,
-      'tagName': tagName,
-      'startDateTime': startDateTime.toIso8601String(),
-      'coverPhotoLink': coverPhotoLink,
       'isFavorite': isFavorite,
     };
   }
