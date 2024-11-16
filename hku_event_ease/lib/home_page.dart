@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   static final List<Widget> _widgetOptions = <Widget>[
     ListViewPage(),
     GridViewPage(),
-    FavView(),
+    FavoriteViewPage(),
   ];
 
   void _onItemTapped(int index) {
