@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'services/api_service.dart';
+import 'package:intl/intl.dart';
 import 'models/list_view_item.dart';
 import 'event_search_bar.dart';
 import 'event_list.dart';
@@ -21,6 +22,10 @@ class _ListViewPageState extends State<ListViewPage> {
     'Seminars': Colors.greenAccent,
     'Workshops': Colors.orangeAccent,
     'Clubs': Colors.purpleAccent,
+    'Music': Colors.redAccent,
+    'Networking': Colors.green,
+    'Technology': Colors.cyanAccent,
+    'Art': Colors.pinkAccent,
   };
 
   @override
@@ -66,7 +71,7 @@ class _ListViewPageState extends State<ListViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('List View'),
+        title: Text('Latest Events'),
       ),
       body: Center(
         child: Column(
@@ -79,6 +84,16 @@ class _ListViewPageState extends State<ListViewPage> {
                 children: _selectedTag.isEmpty
                     ? _tags.entries.map((entry) => _buildTag(entry.key, entry.value)).toList()
                     : [_buildTag(_selectedTag, _tags[_selectedTag]!)],
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                DateFormat('EEEE, d MMMM, yyyy').format(DateTime.now()),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
               ),
             ),
             Expanded(

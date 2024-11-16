@@ -64,25 +64,55 @@ class _EventListState extends State<EventList> {
     );
   }
 
+  String _formatDateTime(DateTime dateTime) {
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: widget.eventItems.length,
       itemBuilder: (BuildContext context, int index) {
         final eventItem = widget.eventItems[index];
-        return ListTile(
-          title: Text(eventItem.eventName),
-          subtitle: Text('${eventItem.tagName} - ${eventItem.startDateTime}'),
-          trailing: IconButton(
-            icon: Icon(
-              eventItem.isFavorite ? Icons.favorite : Icons.favorite_border,
+        return Card(
+          margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          child: ListTile(
+            leading: Image.network(
+              eventItem.coverPhotoLink,
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
             ),
-            color: eventItem.isFavorite ? Colors.red : Colors.grey,
-            onPressed: () => _toggleFavorite(eventItem),
+            contentPadding: EdgeInsets.all(16.0),
+            title: Text(
+              eventItem.eventName,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  eventItem.tagName,
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+                SizedBox(height: 4.0),
+                Text(
+                  _formatDateTime(eventItem.startDateTime),
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+              ],
+            ),
+            trailing: IconButton(
+              icon: Icon(
+                eventItem.isFavorite ? Icons.favorite : Icons.favorite_border,
+              ),
+              color: eventItem.isFavorite ? Colors.red : Colors.grey,
+              onPressed: () => _toggleFavorite(eventItem),
+            ),
+            onTap: () {
+              _navigateToDetailsPage(context, eventItem.eventId);
+            },
           ),
-          onTap: () {
-            _navigateToDetailsPage(context, eventItem.eventId);
-          },
         );
       },
     );
