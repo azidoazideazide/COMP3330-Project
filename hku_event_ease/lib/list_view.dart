@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'details_page.dart';
 import 'services/api_service.dart';
 import 'models/list_view_item.dart';
@@ -122,7 +123,13 @@ class _ListViewPageState extends State<ListViewPage> {
     );
   }
 
-      // Toggle favorite status and store it
+  String _formatDateTime(DateTime dateTime) {
+    String formattedDate = DateFormat('d MMM y').format(dateTime);
+    String formattedTime = DateFormat('HH:mm').format(dateTime);
+    return '$formattedDate - $formattedTime';
+  }
+
+  // Toggle favorite status and store it
   Future<void> _toggleFavorite(ListViewItem item) async {
     setState(() {
       item.isFavorite = !item.isFavorite;
@@ -136,8 +143,6 @@ class _ListViewPageState extends State<ListViewPage> {
     final favorites = _pendingEventItems.then((items) =>
         items.where((item) => item.isFavorite).map((e) => e.toJson()).toList());
     prefs.setString('favoriteEvents', jsonEncode(await favorites));
-    //debug
-    //print("Saved favorites: ${prefs.getString('favoriteEvents')}");
   }
 
   // Load favorite items from SharedPreferences
@@ -146,15 +151,11 @@ class _ListViewPageState extends State<ListViewPage> {
     final favoriteJson = prefs.getString('favoriteEvents') ?? '[]';
     final List<dynamic> favoriteList = jsonDecode(favoriteJson);
     final favoriteItems = favoriteList.map((json) => ListViewItem.fromJson(json)).toList();
-    //debug
-    //print("Loaded favorites: $favoriteItems");
 
-    // Wait for _pendingEventItems to complete and get the list of items
     final eventItems = await _pendingEventItems;
 
     setState(() {
       for (var item in favoriteItems) {
-        // Find the index of the favorite item in the fetched list
         final index = eventItems.indexWhere((e) => e.eventName == item.eventName);
         if (index != -1) eventItems[index].isFavorite = true;
       }
@@ -165,13 +166,30 @@ class _ListViewPageState extends State<ListViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('List View'),
+        title: Text('HKU EVENTEASE'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.sports),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.calendar_today),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.work),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.school),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Center(
         child: Column(
           children: <Widget>[
             EventSearchBar(onSearch: _filterEvents),
-            // Tags Row
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -195,21 +213,41 @@ class _ListViewPageState extends State<ListViewPage> {
                     return ListView.builder(
                       itemCount: eventItems.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final eventItem = eventItems[index];
-                        return ListTile(
-                          title: Text(eventItem.eventName),
-                          subtitle: Text('${eventItem.tagName} - ${eventItem.startDateTime}'),
-                          trailing: IconButton(
+                      final eventItem = eventItems[index];
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        child: ListTile(
+                        contentPadding: EdgeInsets.all(16.0),
+                        title: Text(
+                          eventItem.eventName,
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                          Text(
+                            eventItem.tagName,
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                          SizedBox(height: 4.0),
+                          Text(
+                            _formatDateTime(eventItem.startDateTime),
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                          ],
+                        ),
+                        trailing: IconButton(
                           icon: Icon(
-                            eventItem.isFavorite ? Icons.favorite : Icons.favorite_border,
+                          eventItem.isFavorite ? Icons.favorite : Icons.favorite_border,
                           ),
                           color: eventItem.isFavorite ? Colors.red : Colors.grey,
                           onPressed: () => _toggleFavorite(eventItem),
                         ),
-                          onTap: () {
-                            _navigateToDetailsPage(context, eventItem.eventId);
-                          },
-                        );
+                        onTap: () {
+                          _navigateToDetailsPage(context, eventItem.eventId);
+                        },
+                        ),
+                      );
                       },
                     );
                   }
