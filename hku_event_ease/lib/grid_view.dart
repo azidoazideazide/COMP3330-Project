@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
 import 'details_page.dart';
 import 'event_search_bar.dart';
 import 'models/grid_view_item.dart';
@@ -17,18 +20,18 @@ class _GridViewPageState extends State<GridViewPage> {
   List<GridViewItem> _filteredEventItems = [];
   String _searchQuery = '';
 
-
   void _filterEvents(String query) {
     setState(() {
       _searchQuery = query;
       _pendingEventItems.then((items) {
         _filteredEventItems = items.where((item) {
           return item.eventName.toLowerCase().contains(query.toLowerCase()) ||
-                 item.tagName.toLowerCase().contains(query.toLowerCase());
+              item.tagName.toLowerCase().contains(query.toLowerCase());
         }).toList();
       });
     });
   }
+
   // placeholder function. Should be replaced by a show event detail page
   void _navigateToDetailsPage(BuildContext context, String eventId) {
     Navigator.push(
@@ -53,36 +56,41 @@ class _GridViewPageState extends State<GridViewPage> {
         children: <Widget>[
           EventSearchBar(onSearch: _filterEvents),
           Expanded(
-              child: FutureBuilder(
-                  future: _pendingEventItems,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No events found'));
-                    } else {
-                      final eventItems = _searchQuery.isEmpty ? snapshot.data! : _filteredEventItems;
-                      return GridView.builder(
-                        itemCount: eventItems.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          final eventItem = eventItems[index];
-
-                          return GestureDetector(
-                            // Later Implement and link to a detailed view
+            child: FutureBuilder(
+                future: _pendingEventItems,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No events found'));
+                  } else {
+                    final eventItems = _searchQuery.isEmpty
+                        ? snapshot.data!
+                        : _filteredEventItems;
+                    return StaggeredGridView.countBuilder(
+                      crossAxisCount: 3,
+                      itemCount: eventItems.length,
+                      mainAxisSpacing: 4,
+                      crossAxisSpacing: 4,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          child: GestureDetector(
                             onTap: () {
-                              _navigateToDetailsPage(context, eventItem.eventId);
+                              _navigateToDetailsPage(
+                                  context, eventItems[index].eventId);
                             },
-
-                            child: Image.network(eventItem.coverPhotoLink,
-                                fit: BoxFit.contain),
-                          );
-                        },
-                      );
-                    }
-                  })),
+                            child:
+                                Image.network(eventItems[index].coverPhotoLink),
+                          ),
+                        );
+                      },
+                      staggeredTileBuilder: (index) => StaggeredTile.count(
+                          eventItems[index].crossAxisCount,
+                          eventItems[index].mainAxisCount),
+                    );
+                  }
+                }),
+          )
         ],
       ),
     );

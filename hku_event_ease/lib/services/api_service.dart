@@ -25,16 +25,19 @@ class ApiService {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
-      data['endDateTime'] = data['endDateTime'] ?? DateTime.parse(data['startDateTime']).add(Duration(hours: 1)).toIso8601String();
+      data['endDateTime'] = data['endDateTime'] ??
+          DateTime.parse(data['startDateTime'])
+              .add(Duration(hours: 1))
+              .toIso8601String();
       final photosResponse = await http.get(Uri.parse('$baseUrl/coverPhotos'));
       if (photosResponse.statusCode == 200) {
-      List<dynamic> photosData = jsonDecode(photosResponse.body);
-      for (var photo in photosData) {
-        if (photo['eventId'] == id) {
-          data['coverPhotoLink'] = photo['coverPhotoLink'];
-          break;
+        List<dynamic> photosData = jsonDecode(photosResponse.body);
+        for (var photo in photosData) {
+          if (photo['eventId'] == id) {
+            data['coverPhotoLink'] = photo['coverPhotoLink'];
+            break;
+          }
         }
-      }
       } else {
         throw Exception('Failed to fetch photos from $baseUrl/coverPhotos');
       }
@@ -63,10 +66,31 @@ class ApiService {
     }
 
     // combine eventData and coverPhotoData by eventId
+    // calculate crossAxisCount and mainAxisCount
     for (var event in eventData) {
       for (var coverPhoto in coverPhotoData) {
         if (event['eventId'] == coverPhoto['eventId']) {
           event['coverPhotoLink'] = coverPhoto['coverPhotoLink'];
+
+          int crossAxisCount;
+          double mainAxisCount;
+
+          double aspectRatio =
+              coverPhoto['coverPhotoWidth'] / coverPhoto['coverPhotoHeight'];
+
+          if (aspectRatio >= 2) {
+            crossAxisCount = 2;
+            mainAxisCount = 1;
+          } else if (aspectRatio <= 0.5) {
+            crossAxisCount = 1;
+            mainAxisCount = 2;
+          } else {
+            crossAxisCount = 1;
+            mainAxisCount = 1;
+          }
+
+          event['crossAxisCount'] = crossAxisCount;
+          event['mainAxisCount'] = mainAxisCount;
           break;
         }
       }
