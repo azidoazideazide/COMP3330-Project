@@ -217,6 +217,12 @@ class _ListViewPageState extends State<ListViewPage> {
                       return Card(
                         margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                         child: ListTile(
+                        leading: Image.network(
+                          eventItem.coverPhotoLink,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        ),
                         contentPadding: EdgeInsets.all(16.0),
                         title: Text(
                           eventItem.eventName,
@@ -226,13 +232,13 @@ class _ListViewPageState extends State<ListViewPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                           Text(
-                            eventItem.tagName,
-                            style: TextStyle(color: Colors.grey[600]),
+                          eventItem.tagName,
+                          style: TextStyle(color: Colors.grey[600]),
                           ),
                           SizedBox(height: 4.0),
                           Text(
-                            _formatDateTime(eventItem.startDateTime),
-                            style: TextStyle(color: Colors.grey[600]),
+                          _formatDateTime(eventItem.startDateTime),
+                          style: TextStyle(color: Colors.grey[600]),
                           ),
                           ],
                         ),
