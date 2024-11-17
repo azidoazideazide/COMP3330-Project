@@ -4,6 +4,8 @@ import '../services/api_service.dart';
 import '../models/detail_view_item.dart';
 import '../models/favorite_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'dart:convert';
 
 class DetailsPage extends StatefulWidget {
@@ -19,6 +21,8 @@ class _DetailsPageState extends State<DetailsPage> {
   late Future<DetailViewItem> _imageData;
   final ApiService apiService = ApiService();
   bool _isFavorite = false;
+  PageController _pageController = PageController();
+  int _currentIndex = 0; // Tracks the current index for the PageView
 
   @override
   void initState() {
@@ -34,7 +38,8 @@ class _DetailsPageState extends State<DetailsPage> {
       final List<dynamic> favoriteList = jsonDecode(favoriteEvents);
       final favoriteItems = favoriteList.map((e) => FavoriteItem.fromJson(e)).toList();
       setState(() {
-        _isFavorite = favoriteItems.any((item) => item.eventId == widget.imageId && item.isFavorite);
+        _isFavorite = favoriteItems.any(
+            (item) => item.eventId == widget.imageId && item.isFavorite);
       });
     }
   }
@@ -43,7 +48,9 @@ class _DetailsPageState extends State<DetailsPage> {
     final prefs = await SharedPreferences.getInstance();
     final favoriteEvents = prefs.getString('favoriteEvents');
     List<FavoriteItem> favoriteItems = favoriteEvents != null
-        ? (jsonDecode(favoriteEvents) as List).map((e) => FavoriteItem.fromJson(e)).toList()
+        ? (jsonDecode(favoriteEvents) as List)
+            .map((e) => FavoriteItem.fromJson(e))
+            .toList()
         : [];
 
     setState(() {
@@ -56,13 +63,15 @@ class _DetailsPageState extends State<DetailsPage> {
       favoriteItems.removeWhere((fav) => fav.eventId == item.eventId);
     }
 
-    await prefs.setString('favoriteEvents', jsonEncode(favoriteItems.map((e) => e.toJson()).toList()));
+    await prefs.setString(
+        'favoriteEvents', jsonEncode(favoriteItems.map((e) => e.toJson()).toList()));
   }
 
   void _addEvent(DetailViewItem eventInfo) {
     final event = Event(
       title: eventInfo.eventName,
-      description: '${eventInfo.organizerName}, ${eventInfo.venue}',
+      description:
+          '${eventInfo.organizerName}, ${eventInfo.venue}',
       location: eventInfo.venue,
       startDate: eventInfo.startDateTime,
       endDate: eventInfo.endDateTime,
@@ -89,51 +98,158 @@ class _DetailsPageState extends State<DetailsPage> {
           } else if (!snapshot.hasData) {
             return Center(child: Text('No data found'));
           } else {
-            final imageInfo = snapshot.data!;
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.network(imageInfo.coverPhotoLink),
-                  SizedBox(height: 20),
-                  Text(
-                    imageInfo.eventName,
-                    style: TextStyle(fontSize: 24),
+            final eventInfo = snapshot.data!;
+            // Assuming only one image; adjust if multiple images are available
+            final List<String> imageUrls = [eventInfo.coverPhotoLink];
+            // If DetailViewItem has multiple images, populate imageUrls accordingly
+            // e.g., final List<String> imageUrls = eventInfo.imageUrls;
+
+            return Stack(
+              children: [
+                SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: 60.0), // Space for the favorite icon
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Image Display
+                      Container(
+                        width: double.infinity,
+                        child: imageUrls.length > 1
+                            ? Stack(
+                                alignment: Alignment.bottomCenter,
+                                children: [
+                                  PageView.builder(
+                                    controller: _pageController,
+                                    itemCount: imageUrls.length,
+                                    onPageChanged: (index) {
+                                      setState(() {
+                                        _currentIndex = index;
+                                      });
+                                    },
+                                    itemBuilder: (context, index) {
+                                      return Image.network(
+                                        imageUrls[index],
+                                        fit: BoxFit.cover,
+                                        loadingBuilder: (context, child, progress) {
+                                          if (progress == null) return child;
+                                          return Center(
+                                              child: CircularProgressIndicator(
+                                            value: progress.expectedTotalBytes != null
+                                                ? progress.cumulativeBytesLoaded /
+                                                    progress.expectedTotalBytes!
+                                                : null,
+                                          ));
+                                        },
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Center(child: Icon(Icons.broken_image));
+                                        },
+                                      );
+                                    },
+                                  ),
+                                  if (imageUrls.length > 1)
+                                    Positioned(
+                                      bottom: 10,
+                                      child: SmoothPageIndicator(
+                                        controller: _pageController,
+                                        count: imageUrls.length,
+                                        effect: ExpandingDotsEffect(
+                                          activeDotColor: Colors.white,
+                                          dotColor: Colors.white54,
+                                          dotHeight: 8,
+                                          dotWidth: 8,
+                                          expansionFactor: 3,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              )
+                            : Image.network(
+                                imageUrls.first,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                loadingBuilder: (context, child, progress) {
+                                  if (progress == null) return child;
+                                  return Center(
+                                      child: CircularProgressIndicator(
+                                    value: progress.expectedTotalBytes != null
+                                        ? progress.cumulativeBytesLoaded /
+                                            progress.expectedTotalBytes!
+                                        : null,
+                                  ));
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Center(child: Icon(Icons.broken_image));
+                                },
+                              ),
+                      ),
+                      SizedBox(height: 16),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              eventInfo.eventName,
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Organizer: ${eventInfo.organizerName}',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Venue: ${eventInfo.venue}',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Start Time: ${DateFormat('dd MMM yyyy, hh:mm a').format(eventInfo.startDateTime)}',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'End Time: ${DateFormat('dd MMM yyyy, hh:mm a').format(eventInfo.endDateTime)}',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 16),
+                            ElevatedButton.icon(
+                              onPressed: () => _addEvent(eventInfo),
+                              icon: Icon(Icons.calendar_today),
+                              label: Text('Add Event to Calendar'),
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 12.0),
+                                textStyle:
+                                    TextStyle(fontSize: 16, color: Colors.white),
+                              ),
+                            ),
+                            // Add more event details or remarks here if needed
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Organizer: ${imageInfo.organizerName}',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Venue: ${imageInfo.venue}',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Start Time: ${imageInfo.startDateTime}',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'End Time: ${imageInfo.endDateTime}',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () => _addEvent(imageInfo),
-                    child: Text('Add Event to Calendar'),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      _isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: _isFavorite ? Colors.red : Colors.grey,
+                ),
+                // Favorite Icon fixed at the bottom center
+                Positioned(
+                  bottom: 16.0,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: FloatingActionButton(
+                      onPressed: () => _toggleFavorite(eventInfo),
+                      backgroundColor: _isFavorite ? Colors.red : Colors.blue,
+                      child: Icon(
+                        _isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: Colors.white,
+                      ),
+                      tooltip: _isFavorite ? 'Unfavorite' : 'Favorite',
                     ),
-                    onPressed: () => _toggleFavorite(imageInfo),
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           }
         },
