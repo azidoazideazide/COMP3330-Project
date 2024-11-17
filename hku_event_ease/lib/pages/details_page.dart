@@ -213,6 +213,11 @@ class _DetailsPageState extends State<DetailsPage> {
                               'End Time: ${DateFormat('dd MMM yyyy, hh:mm a').format(eventInfo.endDateTime)}',
                               style: TextStyle(fontSize: 18),
                             ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Description: ${eventInfo.description}',
+                              style: TextStyle(fontSize: 18),
+                            ),
                             SizedBox(height: 16),
                             ElevatedButton.icon(
                               onPressed: () => _addEvent(eventInfo),

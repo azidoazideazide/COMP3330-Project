@@ -8,6 +8,7 @@ class DetailViewItem {
   final DateTime endDateTime;
   final String tagName;
   final String registerLink;
+  final String description;
 
   DetailViewItem({
     required this.eventId,
@@ -19,6 +20,7 @@ class DetailViewItem {
     required this.endDateTime,
     required this.tagName,
     required this.registerLink,
+    required this.description,
   });
 
   factory DetailViewItem.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class DetailViewItem {
       endDateTime: DateTime.parse(json['endDateTime']),
       tagName: json['tagName'],
       registerLink: json['registerLink'],
+      description: json['description'],
     );
   }
 }
