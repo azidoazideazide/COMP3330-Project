@@ -83,7 +83,6 @@ class _ListViewPageState extends State<ListViewPage> {
     });
   }
 
-  // Method to build the tag widgets
   Widget _buildTag(String tag, Color color) {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -93,7 +92,7 @@ class _ListViewPageState extends State<ListViewPage> {
         },
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 4.0),
-          padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(20.0),
@@ -129,7 +128,6 @@ class _ListViewPageState extends State<ListViewPage> {
     return '$formattedDate - $formattedTime';
   }
 
-  // Toggle favorite status and store it
   Future<void> _toggleFavorite(ListViewItem item) async {
     setState(() {
       item.isFavorite = !item.isFavorite;
@@ -137,29 +135,31 @@ class _ListViewPageState extends State<ListViewPage> {
     await _saveFavorites();
   }
 
-  // Save favorite items to SharedPreferences
-  Future<void> _saveFavorites() async {
-    final prefs = await SharedPreferences.getInstance();
-    final favorites = _pendingEventItems.then((items) =>
-        items.where((item) => item.isFavorite).map((e) => e.toJson()).toList());
-    prefs.setString('favoriteEvents', jsonEncode(await favorites));
-  }
-
-  // Load favorite items from SharedPreferences
   Future<void> _loadFavorites() async {
     final prefs = await SharedPreferences.getInstance();
-    final favoriteJson = prefs.getString('favoriteEvents') ?? '[]';
-    final List<dynamic> favoriteList = jsonDecode(favoriteJson);
-    final favoriteItems = favoriteList.map((json) => ListViewItem.fromJson(json)).toList();
+    final favoriteEventsJson = prefs.getString('favoriteEvents');
 
-    final eventItems = await _pendingEventItems;
+    if (favoriteEventsJson != null) {
+      final favoriteEvents = json.decode(favoriteEventsJson) as List<dynamic>;
 
-    setState(() {
-      for (var item in favoriteItems) {
-        final index = eventItems.indexWhere((e) => e.eventName == item.eventName);
-        if (index != -1) eventItems[index].isFavorite = true;
-      }
+      setState(() {
+        _pendingEventItems = _pendingEventItems.then((eventItems) {
+          return eventItems.map((item) {
+            item.isFavorite = favoriteEvents.contains(item.eventId);
+            return item;
+          }).toList();
+        });
+      });
+    }
+  }
+
+  Future<void> _saveFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final favoriteEvents = await _pendingEventItems.then((eventItems) {
+      return eventItems.where((item) => item.isFavorite).map((item) => item.eventId).toList();
     });
+
+    await prefs.setString('favoriteEvents', json.encode(favoriteEvents));
   }
 
   @override
@@ -186,9 +186,10 @@ class _ListViewPageState extends State<ListViewPage> {
           ),
         ],
       ),
-      body: Center(
+      body: Container(
+        color: Colors.white,
         child: Column(
-          children: <Widget>[
+          children: [
             EventSearchBar(onSearch: _filterEvents),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -203,57 +204,105 @@ class _ListViewPageState extends State<ListViewPage> {
                 future: _pendingEventItems,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator());
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('No events found'));
+                    return Center(child: Text('No events found'));
                   } else {
                     final eventItems = _searchQuery.isEmpty && _selectedTag.isEmpty
                         ? snapshot.data!
                         : _filteredEventItems;
                     return ListView.builder(
                       itemCount: eventItems.length,
-                      itemBuilder: (BuildContext context, int index) {
-                      final eventItem = eventItems[index];
-                      return Card(
-                        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                        child: ListTile(
-                        leading: Image.network(
-                          eventItem.coverPhotoLink,
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                        ),
-                        contentPadding: EdgeInsets.all(16.0),
-                        title: Text(
-                          eventItem.eventName,
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                          Text(
-                          eventItem.tagName,
-                          style: TextStyle(color: Colors.grey[600]),
+                      itemBuilder: (context, index) {
+                        final item = eventItems[index];
+                        final tagColor = _tags[item.tagName] ?? Colors.grey;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
+                          child: Column(
+                            children: [
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(32.0),
+                                ),
+                                color: Colors.grey[200],
+                                child: InkWell(
+                                  onTap: () {
+                                    _navigateToDetailsPage(context, item.eventId);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(
+                                            item.isFavorite ? Icons.favorite : Icons.favorite_border,
+                                          ),
+                                          color: item.isFavorite ? Colors.red : Colors.grey,
+                                          onPressed: () => _toggleFavorite(item),
+                                        ),
+                                        SizedBox(width: 16),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                item.eventName,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                  color: Color(0xFF006400),
+                                                ),
+                                              ),
+                                              SizedBox(height: 8),
+                                              Text(
+                                                '${item.organizerName}',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4),
+                                              Text(
+                                                '${_formatDateTime(item.startDateTime)}',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4),
+                                              
+                                              
+                                              
+                                          
+                                            
+                                              Container(
+                                                padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                                                decoration: BoxDecoration(
+                                                  color: tagColor,
+                                                  borderRadius: BorderRadius.circular(20.0),
+                                                ),
+                                                child: Text(
+                                                  item.tagName,
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: 4.0),
-                          Text(
-                          _formatDateTime(eventItem.startDateTime),
-                          style: TextStyle(color: Colors.grey[600]),
-                          ),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(
-                          eventItem.isFavorite ? Icons.favorite : Icons.favorite_border,
-                          ),
-                          color: eventItem.isFavorite ? Colors.red : Colors.grey,
-                          onPressed: () => _toggleFavorite(eventItem),
-                        ),
-                        onTap: () {
-                          _navigateToDetailsPage(context, eventItem.eventId);
-                        },
-                        ),
-                      );
+                        );
                       },
                     );
                   }
