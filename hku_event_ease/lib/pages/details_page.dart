@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailsPage extends StatefulWidget {
   final String imageId;
@@ -108,79 +109,85 @@ class _DetailsPageState extends State<DetailsPage> {
               children: [
                 SingleChildScrollView(
                   padding: EdgeInsets.only(bottom: 60.0), // Space for the favorite icon
-                  child: Column(
+                    child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Image Display
                       Container(
-                        width: double.infinity,
-                        child: imageUrls.length > 1
-                            ? Stack(
-                                alignment: Alignment.bottomCenter,
-                                children: [
-                                  PageView.builder(
-                                    controller: _pageController,
-                                    itemCount: imageUrls.length,
-                                    onPageChanged: (index) {
-                                      setState(() {
-                                        _currentIndex = index;
-                                      });
-                                    },
-                                    itemBuilder: (context, index) {
-                                      return Image.network(
-                                        imageUrls[index],
-                                        fit: BoxFit.cover,
-                                        loadingBuilder: (context, child, progress) {
-                                          if (progress == null) return child;
-                                          return Center(
-                                              child: CircularProgressIndicator(
-                                            value: progress.expectedTotalBytes != null
-                                                ? progress.cumulativeBytesLoaded /
-                                                    progress.expectedTotalBytes!
-                                                : null,
-                                          ));
-                                        },
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Center(child: Icon(Icons.broken_image));
-                                        },
-                                      );
-                                    },
-                                  ),
-                                  if (imageUrls.length > 1)
-                                    Positioned(
-                                      bottom: 10,
-                                      child: SmoothPageIndicator(
-                                        controller: _pageController,
-                                        count: imageUrls.length,
-                                        effect: ExpandingDotsEffect(
-                                          activeDotColor: Colors.white,
-                                          dotColor: Colors.white54,
-                                          dotHeight: 8,
-                                          dotWidth: 8,
-                                          expansionFactor: 3,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              )
-                            : Image.network(
-                                imageUrls.first,
+                      width: double.infinity,
+                      child: imageUrls.length > 1
+                        ? Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            PageView.builder(
+                            controller: _pageController,
+                            itemCount: imageUrls.length,
+                            onPageChanged: (index) {
+                              setState(() {
+                              _currentIndex = index;
+                              });
+                            },
+                            itemBuilder: (context, index) {
+                              return ClipRRect(
+                              borderRadius: BorderRadius.circular(16.0),
+                              child: Image.network(
+                                imageUrls[index],
                                 fit: BoxFit.cover,
-                                width: double.infinity,
                                 loadingBuilder: (context, child, progress) {
-                                  if (progress == null) return child;
-                                  return Center(
-                                      child: CircularProgressIndicator(
-                                    value: progress.expectedTotalBytes != null
-                                        ? progress.cumulativeBytesLoaded /
-                                            progress.expectedTotalBytes!
-                                        : null,
-                                  ));
+                                if (progress == null) return child;
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                  value: progress.expectedTotalBytes != null
+                                    ? progress.cumulativeBytesLoaded /
+                                      progress.expectedTotalBytes!
+                                    : null,
+                                ));
                                 },
                                 errorBuilder: (context, error, stackTrace) {
-                                  return Center(child: Icon(Icons.broken_image));
+                                return Center(child: Icon(Icons.broken_image));
                                 },
                               ),
+                              );
+                            },
+                            ),
+                            if (imageUrls.length > 1)
+                            Positioned(
+                              bottom: 10,
+                              child: SmoothPageIndicator(
+                              controller: _pageController,
+                              count: imageUrls.length,
+                              effect: ExpandingDotsEffect(
+                                activeDotColor: Colors.white,
+                                dotColor: Colors.white54,
+                                dotHeight: 8,
+                                dotWidth: 8,
+                                expansionFactor: 3,
+                              ),
+                              ),
+                            ),
+                          ],
+                          )
+                        : ClipRRect(
+                          borderRadius: BorderRadius.circular(16.0),
+                          child: Image.network(
+                            imageUrls.first,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            loadingBuilder: (context, child, progress) {
+                            if (progress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                              value: progress.expectedTotalBytes != null
+                                ? progress.cumulativeBytesLoaded /
+                                  progress.expectedTotalBytes!
+                                : null,
+                            ));
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                            return Center(child: Icon(Icons.broken_image));
+                            },
+                          ),
+                          ),
                       ),
                       SizedBox(height: 16),
                       Padding(
@@ -188,35 +195,68 @@ class _DetailsPageState extends State<DetailsPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              eventInfo.eventName,
-                              style: TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                              width: double.infinity,
+                                decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.circular(12.0),
+                                ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    eventInfo.eventName,
+                                    style: TextStyle(
+                                        fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'Organizer: ${eventInfo.organizerName}',
+                                    style: TextStyle(fontSize: 18, color: Colors.white),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'Venue: ${eventInfo.venue}',
+                                    style: TextStyle(fontSize: 18, color: Colors.white),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'Start Time: ${DateFormat('dd MMM yyyy, hh:mm a').format(eventInfo.startDateTime)}',
+                                    style: TextStyle(fontSize: 18, color: Colors.white),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'End Time: ${DateFormat('dd MMM yyyy, hh:mm a').format(eventInfo.endDateTime)}',
+                                    style: TextStyle(fontSize: 18, color: Colors.white),
+                                  ),
+                                ],
+                              ),
                             ),
                             SizedBox(height: 8),
-                            Text(
-                              'Organizer: ${eventInfo.organizerName}',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Venue: ${eventInfo.venue}',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Start Time: ${DateFormat('dd MMM yyyy, hh:mm a').format(eventInfo.startDateTime)}',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'End Time: ${DateFormat('dd MMM yyyy, hh:mm a').format(eventInfo.endDateTime)}',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Description: ${eventInfo.description}',
-                              style: TextStyle(fontSize: 18),
+                            Container(
+                              padding: EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                'Description:',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                eventInfo.description,
+                                style: TextStyle(fontSize: 16),
+                                ),
+                              ],
+                              ),
                             ),
                             SizedBox(height: 16),
                             ElevatedButton.icon(
@@ -231,27 +271,42 @@ class _DetailsPageState extends State<DetailsPage> {
                               ),
                             ),
                             // Add more event details or remarks here if needed
+                          SizedBox(height: 16),
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                  launchUrl(Uri.parse(eventInfo.registerLink));
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                              ),
+                              child: Text(
+                                'Register',
+                                style: TextStyle(fontSize: 16, color: Colors.white),
+                              ),
+                            ),
+                          ),
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                // Favorite Icon fixed at the bottom center
                 Positioned(
                   bottom: 16.0,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: FloatingActionButton(
-                      onPressed: () => _toggleFavorite(eventInfo),
-                      backgroundColor: _isFavorite ? Colors.red : Colors.blue,
-                      child: Icon(
-                        _isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: Colors.white,
-                      ),
-                      tooltip: _isFavorite ? 'Unfavorite' : 'Favorite',
+                  right: 16.0,
+                  child: FloatingActionButton(
+                    onPressed: () => _toggleFavorite(eventInfo),
+                    backgroundColor: _isFavorite ? Colors.red : Colors.blue,
+                    child: Icon(
+                      _isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: Colors.white,
                     ),
+                    tooltip: _isFavorite ? 'Unfavorite' : 'Favorite',
                   ),
                 ),
               ],
