@@ -90,7 +90,7 @@ class _EventListState extends State<EventList> {
     });
   }
 
-  Future<void> _toggleFavorite(ListViewItem item) async {
+  Future<void> _toggleFavorite(ListViewItem item, {bool applyFilters = true}) async {
     setState(() {
       item.isFavorite = !item.isFavorite;
       if (item.isFavorite) {
@@ -98,7 +98,9 @@ class _EventListState extends State<EventList> {
       } else {
         _favoriteItems.removeWhere((fav) => fav.eventId == item.eventId);
       }
-      _applyFilters(); // Re-apply filters to update favorite status
+      if (applyFilters) {
+        _applyFilters();
+      }
     });
     await _saveFavorites();
   }
@@ -135,40 +137,41 @@ class _EventListState extends State<EventList> {
       itemCount: _filteredEventItems.length,
       itemBuilder: (BuildContext context, int index) {
         final eventItem = _filteredEventItems[index];
+        // Inside your ListView.builder
         return Card(
           margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           child: ListTile(
-            leading: Image.network(
-              eventItem.coverPhotoLink,
-              width: 50,
-              height: 50,
-              fit: BoxFit.cover,
+          leading: Image.network(
+            eventItem.coverPhotoLink,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          ),
+          contentPadding: EdgeInsets.all(16.0),
+          title: Text(
+            eventItem.eventName,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+          ),
+          subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              eventItem.tagName,
+              style: TextStyle(color: Colors.grey[600]),
             ),
-            contentPadding: EdgeInsets.all(16.0),
-            title: Text(
-              eventItem.eventName,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+            SizedBox(height: 4.0),
+            Text(
+              _formatDateTime(eventItem.startDateTime),
+              style: TextStyle(color: Colors.grey[600]),
             ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  eventItem.tagName,
-                  style: TextStyle(color: Colors.grey[600]),
-                ),
-                SizedBox(height: 4.0),
-                Text(
-                  _formatDateTime(eventItem.startDateTime),
-                  style: TextStyle(color: Colors.grey[600]),
-                ),
               ],
             ),
             trailing: IconButton(
               icon: Icon(
                 eventItem.isFavorite ? Icons.favorite : Icons.favorite_border,
-              ),
+                ),
               color: eventItem.isFavorite ? Colors.red : Colors.grey,
-              onPressed: () => _toggleFavorite(eventItem),
+              onPressed: () => _toggleFavorite(eventItem, applyFilters: !widget.displayFavorites),
             ),
             onTap: () {
               _navigateToDetailsPage(context, eventItem.eventId);
