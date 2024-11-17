@@ -46,7 +46,7 @@ class _ListViewPageState extends State<ListViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('List View'),
+        title: Text("Today's Events"),
       ),
       body: Column(
         children: <Widget>[
