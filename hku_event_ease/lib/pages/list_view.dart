@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../event_search_bar.dart';
 import '../event_list.dart';
 import '../widgets/tag_widget.dart';
@@ -50,8 +51,10 @@ class _ListViewPageState extends State<ListViewPage> {
       body: Column(
         children: <Widget>[
           EventSearchBar(onSearch: _filterEvents),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
             child: Row(
               children: _selectedTag.isEmpty
                   ? _tags.entries.map((entry) => TagWidget(
@@ -70,6 +73,17 @@ class _ListViewPageState extends State<ListViewPage> {
                     ],
             ),
           ),
+          ),
+            Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+              DateFormat('EEEE, d MMMM, y').format(DateTime.now()),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+            ),
           Expanded(
             child: EventList(
               searchQuery: _searchQuery,
