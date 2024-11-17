@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../event_search_bar.dart';
 import '../event_list.dart';
+import '../widgets/tag_widget.dart';
 
 class ListViewPage extends StatefulWidget {
   @override
@@ -53,8 +54,20 @@ class _ListViewPageState extends State<ListViewPage> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: _selectedTag.isEmpty
-                  ? _tags.entries.map((entry) => _buildTag(entry.key, entry.value)).toList()
-                  : [_buildTag(_selectedTag, _tags[_selectedTag]!)],
+                  ? _tags.entries.map((entry) => TagWidget(
+                        tag: entry.key,
+                        color: entry.value,
+                        isSelected: false,
+                        onTap: () => _filterByTag(entry.key),
+                      )).toList()
+                  : [
+                      TagWidget(
+                        tag: _selectedTag,
+                        color: _tags[_selectedTag]!,
+                        isSelected: true,
+                        onTap: _resetTagFilter,
+                      ),
+                    ],
             ),
           ),
           Expanded(
@@ -64,41 +77,6 @@ class _ListViewPageState extends State<ListViewPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTag(String tag, Color color) {
-    return GestureDetector(
-      onTap: () {
-        if (_selectedTag == tag) {
-          _resetTagFilter();
-        } else {
-          _filterByTag(tag);
-        }
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 4.0),
-        padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              tag,
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            if (_selectedTag == tag)
-              Icon(
-                Icons.cancel,
-                color: Colors.white,
-                size: 16,
-              ),
-          ],
-        ),
       ),
     );
   }

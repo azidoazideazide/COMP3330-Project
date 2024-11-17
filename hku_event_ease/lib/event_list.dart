@@ -1,8 +1,11 @@
+// lib/event_list.dart
+
 import 'package:flutter/material.dart';
-import 'models/list_view_item.dart';
-import 'models/favorite_item.dart';
-import 'pages/details_page.dart';
-import 'services/api_service.dart';
+import '../models/list_view_item.dart';
+import '../models/favorite_item.dart';
+import '../pages/details_page.dart';
+import '../services/api_service.dart';
+import '../widgets/tag_widget.dart'; // Import the TagWidget
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -27,6 +30,17 @@ class _EventListState extends State<EventList> {
   List<ListViewItem> _filteredEventItems = [];
   List<FavoriteItem> _favoriteItems = [];
   bool _isLoading = true;
+
+  final Map<String, Color> _tags = {
+    'Sports': Colors.blueAccent,
+    'Seminars': Colors.greenAccent,
+    'Workshops': Colors.orangeAccent,
+    'Clubs': Colors.purpleAccent,
+    'Music': Colors.redAccent,
+    'Networking': Colors.green,
+    'Technology': Colors.cyanAccent,
+    'Arts': Colors.pinkAccent,
+  };
 
   @override
   void initState() {
@@ -120,8 +134,10 @@ class _EventListState extends State<EventList> {
     );
     // After returning from DetailsPage, reload favorites and apply them
     await _loadFavorites();
-    _applyFavorites();
-    _applyFilters();
+    setState(() {
+      _applyFavorites();
+      _applyFilters();
+    });
   }
 
   String _formatDateTime(DateTime dateTime) {
@@ -134,50 +150,125 @@ class _EventListState extends State<EventList> {
       return Center(child: CircularProgressIndicator());
     }
     if (_filteredEventItems.isEmpty) {
-      return Center(child: Text('No events found'));
+      return Center(child: Text('No events found.'));
     }
     return ListView.builder(
       itemCount: _filteredEventItems.length,
       itemBuilder: (BuildContext context, int index) {
         final eventItem = _filteredEventItems[index];
-        return Card(
-          margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          child: ListTile(
-          leading: Image.network(
-            eventItem.coverPhotoLink,
-            width: 50,
-            height: 50,
-            fit: BoxFit.cover,
-          ),
-          contentPadding: EdgeInsets.all(16.0),
-          title: Text(
-            eventItem.eventName,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-          ),
-          subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              eventItem.tagName,
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-            SizedBox(height: 4.0),
-            Text(
-              _formatDateTime(eventItem.startDateTime),
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-              ],
-            ),
-            trailing: IconButton(
-              icon: Icon(
-                eventItem.isFavorite ? Icons.favorite : Icons.favorite_border,
+        final tagColor = _tags[eventItem.tagName] ?? Colors.grey;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Column(
+            children: [
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.0),
                 ),
-              color: eventItem.isFavorite ? Colors.red : Colors.grey,
-              onPressed: () => _toggleFavorite(eventItem, applyFilters: !widget.displayFavorites),
-            ),
-            onTap: () {
-              _navigateToDetailsPage(context, eventItem.eventId);
-            },
+                color: Colors.grey[200],
+                child: InkWell(
+                  onTap: () {
+                    _navigateToDetailsPage(context, eventItem.eventId);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Image.network Widget
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(16.0),
+                          child: Image.network(
+                            eventItem.coverPhotoLink,
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 80,
+                                height: 80,
+                                color: Colors.grey[300],
+                                child: Icon(
+                                  Icons.broken_image,
+                                  color: Colors.grey[600],
+                                ),
+                              );
+                            },
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
+                                width: 80,
+                                height: 80,
+                                color: Colors.grey[300],
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    value: loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                        : null,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        // Event Details
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                eventItem.eventName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                '${eventItem.organizerName}',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                '${_formatDateTime(eventItem.startDateTime)}',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              TagWidget(
+                                tag: eventItem.tagName,
+                                color: tagColor,
+                                isSelected: false, // Set to true if needed
+                                onTap: () {
+                                  // Optional: Handle tag tap if necessary
+                                },
+                              ),
+                              
+                            ],
+                          ),
+                          
+                        ),
+                        // Favorite IconButton
+                        IconButton(
+                          icon: Icon(
+                            eventItem.isFavorite ? Icons.favorite : Icons.favorite_border,
+                          ),
+                          color: eventItem.isFavorite ? Colors.red : Colors.grey,
+                          onPressed: () => _toggleFavorite(eventItem, applyFilters: !widget.displayFavorites),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
