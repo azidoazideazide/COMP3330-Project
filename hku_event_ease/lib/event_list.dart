@@ -133,11 +133,13 @@ class _EventListState extends State<EventList> {
     if (_isLoading) {
       return Center(child: CircularProgressIndicator());
     }
+    if (_filteredEventItems.isEmpty) {
+      return Center(child: Text('No events found'));
+    }
     return ListView.builder(
       itemCount: _filteredEventItems.length,
       itemBuilder: (BuildContext context, int index) {
         final eventItem = _filteredEventItems[index];
-        // Inside your ListView.builder
         return Card(
           margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           child: ListTile(
