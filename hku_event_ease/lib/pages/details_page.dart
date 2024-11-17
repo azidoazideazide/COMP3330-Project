@@ -477,7 +477,6 @@ class _DetailsPageState extends State<DetailsPage> {
                         child: Container(
                           padding: EdgeInsets.all(12.0),
                           decoration: BoxDecoration(
-                            color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Column(
