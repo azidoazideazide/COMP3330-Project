@@ -10,8 +10,6 @@ class FavoriteViewPage extends StatelessWidget {
       ),
       body: EventList(
         displayFavorites: true,
-        searchQuery: '',
-        selectedTag: '',
       ),
     );
   }

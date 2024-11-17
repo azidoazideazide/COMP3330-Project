@@ -59,7 +59,6 @@ class _ListViewPageState extends State<ListViewPage> {
           ),
           Expanded(
             child: EventList(
-              displayFavorites: false,
               searchQuery: _searchQuery,
               selectedTag: _selectedTag,
             ),
