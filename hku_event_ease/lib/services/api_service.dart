@@ -7,10 +7,10 @@ import '../models/grid_view_item.dart';
 class ApiService {
   final String baseUrl;
 
-  ApiService({this.baseUrl = 'http://localhost:8000'});
+  ApiService({this.baseUrl = 'http://10.0.2.2:8000'});
 
   Future<List<ListViewItem>> fetchListViewItems() async {
-     List<dynamic> eventData;
+    List<dynamic> eventData;
     List<dynamic> coverPhotoData;
 
     final events = await http.get(Uri.parse('$baseUrl/events'));

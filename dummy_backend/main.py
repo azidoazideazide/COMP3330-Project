@@ -22,6 +22,8 @@ class Event(BaseModel):
 class CoverPhoto(BaseModel):
     eventId: UUID
     coverPhotoLink: str
+    coverPhotoHeight: int
+    coverPhotoWidth: int
 
 
 # Create the FastAPI app
@@ -389,178 +391,186 @@ events_data = [
 
 # Dummy cover photos data
 cover_photos_data = [
-  {
-    "eventId": "b71e3f5c-2ed8-4e8c-bb0b-d2ee8f3a5584",
-    "coverPhotoLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw1F2IjNE25F75p21WqriRJjx5V9Yn69HicQ&s",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-#   {
-#     "eventId": "9a2a4d41-1d4b-4c3b-bf8b-2a6f7a4e753b",
-#     "coverPhotoLink": "https://koestlerarts.org.uk/wp-content/uploads/2023/05/16-20230516-101033-500x500.png",
-#     "crossAxisCount": 1,
-#     "mainAxisCount": 1
-#   },
-#   {
-#     "eventId": "c8b0e5f4-2b5f-4f8b-bc29-df0f1b5c5b56",
-#     "coverPhotoLink": "https://startupscaleup.com.au/wp-content/uploads/sites/19/2023/08/kk-e1691448878135.jpg",
-#     "crossAxisCount": 1,
-#     "mainAxisCount": 1
-#   },
-  {
-    "eventId": "b4f7a2d0-1c7b-4e8b-bf2b-6e7b4f3a2a6b",
-    "coverPhotoLink": "https://www.shutterstock.com/image-vector/swimming-sport-illustration-vector-background-260nw-2490042407.jpg",
-    "crossAxisCount": 2,
-    "mainAxisCount": 1,
-  },
-  {
-    "eventId": "7aa7e6a2-2f3d-4bdd-af8b-2e2b7c4b4221",
-    "coverPhotoLink": "https://c.saavncdn.com/738/Jam-Session-English-2016-500x500.jpg",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "dc5e7eec-1c3b-4a9b-ab7d-5f71c6a5f4a6",
-    "coverPhotoLink": "https://www.polytechnique.edu/sites/default/files/styles/nc_editor_image/public/content/Logo_GenHack%202024%281%29.png?itok=6F-9ude2",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "e45c6a3d-8d3c-4a9d-9b7f-2c7f4e5a9b5e",
-    "coverPhotoLink": "https://i0.wp.com/transpacificdebate.com/wp-content/uploads/2021/01/1.png?resize=500%2C500&ssl=1",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "a2eb5f6b-9b3d-4f8f-b7e1-d2ec6f7b7f6c",
-    "coverPhotoLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAVVxX1hrC3xsTEuh9owIa_P1nsWbsd_Gkbw&s",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "b4f7a2d0-1c7b-4e8b-bf2b-6e7b4f3a2a6b",
-    "coverPhotoLink": "https://www.shutterstock.com/image-vector/swimming-sport-illustration-vector-background-260nw-2490042407.jpg",
-    "crossAxisCount": 2,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "2f6c5e7b-1d8b-4b8b-8b3b-1e6f3a7a3b5a",
-    "coverPhotoLink": "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/photography-contest-poster-template-design-42e2360e03bdaffb097d667c0776acb7_screen.jpg?ts=1643290497",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "b7b4c5e6-2e8b-4f3b-9b5b-8e7f3c4d7e6a",
-    "coverPhotoLink": "https://img.freepik.com/free-vector/robots-exhibition-isometric-advertising-poster_1284-18590.jpg",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "e7bf0a12-8b45-4c74-a6b3-9a3c90c3e8a9",
-    "coverPhotoLink": "https://www.investhk.gov.hk/media/fttny4v2/20241008-ai-symposium-event_page_save_the_date_v02.jpg",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "f4e9d6cb-3a56-4d89-bac5-b7a503f5b9e1",
-    "coverPhotoLink": "https://img.freepik.com/premium-vector/elegant-fashion-show-poster-design_56102-639.jpg",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "a2c7e3f1-9a23-4b68-8c49-6d8a1b0c5e2d",
-    "coverPhotoLink": "https://thumbs.wbm.im/pw/medium/4fef4d9b7fbdb9c4635d23bcb6257630.jpg",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "b5d1f8a3-2d34-4e89-bac2-8c9e0f7a6d3b",
-    "coverPhotoLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGQG4f6456pDpTE7mQ2gpXN4ZLU80vUldPdg&s",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "c8b5a3d7-1b69-4f82-9a4d-3b6c2e7a1f9d",
-    "coverPhotoLink": "https://marketplace.canva.com/EAFoZbAJO9A/1/0/566w/canva-green-illustrative-sustainable-living-workshop-flyer-lL9wr7j0CAg.jpg",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "d8a3b6c7-2f58-4b19-8c3a-5b9f1a3e6d7c",
-    "coverPhotoLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG9-UGVcrSH6mfgNIdtnj6WY2N1AYqJzRMJg&s",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "f7a2b1d9-4c59-4e89-ba2d-3f5a6b9c1d3e",
-    "coverPhotoLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-t9vPJsEIgPgz3ryPnlJiHdOh7jkVKuFUtw&s",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "e4b3a1f5-2c89-4f19-8b2d-4c5a1d9b3f6a",
-    "coverPhotoLink": "https://cdn.create.vista.com/downloads/915fcec1-5f91-493e-a30f-6005eac5e577_1024.jpeg",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "b1c9d2e8-7a35-4d98-b6a2-5f3b6a9d1c8b",
-    "coverPhotoLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTp-ESUywQYs1rd-faJKAg-RbFgg6A3-dazZg&s",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "f3e2b5c4-1a39-4c89-b2a5-7d9f1c3b5a2e",
-    "coverPhotoLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsB7HB5lktv3eHhCj7Lj8034H22XxqTr-ylw&s",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "a5b3c9d1-e7f2-4a89-8c3b-1d9e6a5b3c9d",
-    "coverPhotoLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQAEXUIGAGKnYFoitdBYq7-zI0B4EEEJYNvQ&s",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "c4b9a1d5-3e7f-4b89-9c2a-5d1e3c7b9a1d",
-    "coverPhotoLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT99y6bPfwcZtqbG6EJtuA2h3vbKYmI_xVROQ&s",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-  {
-    "eventId": "e1d9c5b3-a7f2-4d89-9c1b-3e7f5a1d9c5b",
-    "coverPhotoLink": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVGAcbIBwIyHCCqd90nvANNZ4fhNTnq-HtUg&s",
-    "crossAxisCount": 1,
-    "mainAxisCount": 1
-  },
-    # {
-    #     "eventId": "b2c7a1d9-f5e3-4c89-1b2d-5a9c3b7a1d9f",
-    #     "coverPhotoLink": "Science+Fair",
-    # },
-    # {
-    #     "eventId": "d1e9b5c3-a7f2-4e89-2d1b-5c3a9f1b5d3a",
-    #     "coverPhotoLink": "Yoga+Retreat",
-    # },
-    # {
-    #     "eventId": "f2e7a1b9-d5c3-4f89-1a2d-9c5b3a7f2d5c",
-    #     "coverPhotoLink": "Photography+Masterclass",
-    # },
-    # {
-    #     "eventId": "b3c9d5a1-7e2f-4b89-2d1c-5a9f3e7b1d5a",
-    #     "coverPhotoLink": "Charity+Gala",
-    # },
-    # {
-    #     "eventId": "e5d3c9b1-2f7a-4a89-1d5c-3b9a7f2d5c3b",
-    #     "coverPhotoLink": "Fitness+Expo",
-    # },
-    # {
-    #     "eventId": "a1b5c3d9-f2e7-4b89-1d5c-3a9f1b5c3d9f",
-    #     "coverPhotoLink": "Gaming+Tournament",
-    # },
-    # {
-    #     "eventId": "d9e7b1c5-3f2a-4b89-1d5c-3b7a9f2c5d3b",
-    #     "coverPhotoLink": "Fashion+Design+Workshop",
-    # },
+    {
+        "eventId": "b71e3f5c-2ed8-4e8c-bb0b-d2ee8f3a5584",
+        "coverPhotoLink": "https://dummyimage.com/800x400/000/fff&text=Tech+Talk+2024",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 800,
+    },
+    {
+        "eventId": "9a2a4d41-1d4b-4c3b-bf8b-2a6f7a4e753b",
+        "coverPhotoLink": "https://dummyimage.com/400x800/000/fff&text=Art+Exhibition",
+        "coverPhotoHeight": 800,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "c8b0e5f4-2b5f-4f8b-bc29-df0f1b5c5b56",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Startup+Pitch+Night",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "7aa7e6a2-2f3d-4bdd-af8b-2e2b7c4b4221",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Music+Jam",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "dc5e7eec-1c3b-4a9b-ab7d-5f71c6a5f4a6",
+        "coverPhotoLink": "https://dummyimage.com/800x400/000/fff&text=Coding+Hackathon",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 800,
+    },
+    {
+        "eventId": "e45c6a3d-8d3c-4a9d-9b7f-2c7f4e5a9b5e",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Debate+Championship",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "a2eb5f6b-9b3d-4f8f-b7e1-d2ec6f7b7f6c",
+        "coverPhotoLink": "https://dummyimage.com/400x800/000/fff&text=AI+Workshop",
+        "coverPhotoHeight": 800,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "b4f7a2d0-1c7b-4e8b-bf2b-6e7b4f3a2a6b",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Sports+Meet",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "2f6c5e7b-1d8b-4b8b-8b3b-1e6f3a7a3b5a",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Photography+Contest",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "b7b4c5e6-2e8b-4f3b-9b5b-8e7f3c4d7e6a",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Robotics+Showcase",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "e7bf0a12-8b45-4c74-a6b3-9a3c90c3e8a9",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=AI+Symposium+2024",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "f4e9d6cb-3a56-4d89-bac5-b7a503f5b9e1",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Fashion+Show+Gala",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "a2c7e3f1-9a23-4b68-8c49-6d8a1b0c5e2d",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Medical+Tech+Conference",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "b5d1f8a3-2d34-4e89-bac2-8c9e0f7a6d3b",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Film+Screening+Series",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "c8b5a3d7-1b69-4f82-9a4d-3b6c2e7a1f9d",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Sustainable+Living+Workshop",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "d8a3b6c7-2f58-4b19-8c3a-5b9f1a3e6d7c",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Culinary+Masterclass",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "f7a2b1d9-4c59-4e89-ba2d-3f5a6b9c1d3e",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Music+Festival+2025",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "e4b3a1f5-2c89-4f19-8b2d-4c5a1d9b3f6a",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Robotics+Expo",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "b1c9d2e8-7a35-4d98-b6a2-5f3b6a9d1c8b",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Literary+Symposium",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "f3e2b5c4-1a39-4c89-b2a5-7d9f1c3b5a2e",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=VR+Showcase",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "a5b3c9d1-e7f2-4a89-8c3b-1d9e6a5b3c9d",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Art+Exhibition",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "c4b9a1d5-3e7f-4b89-9c2a-5d1e3c7b9a1d",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Tech+Startup+Summit",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "e1d9c5b3-a7f2-4d89-9c1b-3e7f5a1d9c5b",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Dance+Workshop",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "b2c7a1d9-f5e3-4c89-1b2d-5a9c3b7a1d9f",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Science+Fair",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "d1e9b5c3-a7f2-4e89-2d1b-5c3a9f1b5d3a",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Yoga+Retreat",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "f2e7a1b9-d5c3-4f89-1a2d-9c5b3a7f2d5c",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Photography+Masterclass",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "b3c9d5a1-7e2f-4b89-2d1c-5a9f3e7b1d5a",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Charity+Gala",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "e5d3c9b1-2f7a-4a89-1d5c-3b9a7f2d5c3b",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Fitness+Expo",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "a1b5c3d9-f2e7-4b89-1d5c-3a9f1b5c3d9f",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Gaming+Tournament",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
+    {
+        "eventId": "d9e7b1c5-3f2a-4b89-1d5c-3b7a9f2c5d3b",
+        "coverPhotoLink": "https://dummyimage.com/400x400/000/fff&text=Fashion+Design+Workshop",
+        "coverPhotoHeight": 400,
+        "coverPhotoWidth": 400,
+    },
 ]
 
 cover_event_ids = {item['eventId'] for item in cover_photos_data}

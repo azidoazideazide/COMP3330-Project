@@ -16,8 +16,8 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   static final List<Widget> _widgetOptions = <Widget>[
-    ListViewPage(),
     GridViewPage(),
+    ListViewPage(),
     FavoriteViewPage(),
   ];
 
@@ -45,12 +45,12 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'List View',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.grid_on),
             label: 'Grid View',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'List View',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),

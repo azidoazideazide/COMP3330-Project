@@ -6,12 +6,10 @@ class FavoriteViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Favorite View'),
+        title: Text('Favorite Events'),
       ),
       body: EventList(
         displayFavorites: true,
-        searchQuery: '',
-        selectedTag: '',
       ),
     );
   }
