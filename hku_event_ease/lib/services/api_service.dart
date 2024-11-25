@@ -7,22 +7,41 @@ import '../models/grid_view_item.dart';
 class ApiService {
   final String baseUrl;
 
-  ApiService({this.baseUrl = 'https://hku-eventease-backend.azurewebsites.net/api/events'});
+  ApiService({this.baseUrl = 'http://10.0.2.2:8000'});
 
   Future<List<ListViewItem>> fetchListViewItems() async {
     List<dynamic> eventData;
+    List<dynamic> coverPhotoData;
 
-    final events = await http.get(Uri.parse('$baseUrl/list'));
+    final events = await http.get(Uri.parse('$baseUrl/events'));
     if (events.statusCode == 200) {
       eventData = jsonDecode(events.body);
     } else {
       throw Exception('Failed to fetch data from $baseUrl/events');
     }
+
+    final coverPhotos = await http.get(Uri.parse('$baseUrl/coverPhotos'));
+    if (coverPhotos.statusCode == 200) {
+      coverPhotoData = jsonDecode(coverPhotos.body);
+    } else {
+      throw Exception('Failed to fetch data from $baseUrl/coverPhotos');
+    }
+
+    // combine eventData and coverPhotoData by eventId
+    for (var event in eventData) {
+      for (var coverPhoto in coverPhotoData) {
+        if (event['eventId'] == coverPhoto['eventId']) {
+          event['coverPhotoLink'] = coverPhoto['coverPhotoLink'];
+          break;
+        }
+      }
+    }
+
     return eventData.map((e) => ListViewItem.fromJson(e)).toList();
   }
 
   Future<DetailViewItem> fetchDetailViewItem(String id) async {
-    final response = await http.get(Uri.parse('$baseUrl/detail?eventId=$id'));
+    final response = await http.get(Uri.parse('$baseUrl/event/$id'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
@@ -30,47 +49,76 @@ class ApiService {
           DateTime.parse(data['startDateTime'])
               .add(Duration(hours: 1))
               .toIso8601String();
-              return DetailViewItem.fromJson(data);
+      final photosResponse = await http.get(Uri.parse('$baseUrl/coverPhotos'));
+      if (photosResponse.statusCode == 200) {
+        List<dynamic> photosData = jsonDecode(photosResponse.body);
+        for (var photo in photosData) {
+          if (photo['eventId'] == id) {
+            data['coverPhotoLink'] = photo['coverPhotoLink'];
+            break;
+          }
+        }
+      } else {
+        throw Exception('Failed to fetch photos from $baseUrl/coverPhotos');
+      }
+      return DetailViewItem.fromJson(data);
     } else {
-      throw Exception('Failed to fetch data from $baseUrl/detail?eventId=$id');
+      throw Exception('Failed to fetch data from $baseUrl/event/$id');
     }
   }
 
   Future<List<GridViewItem>> fetchGridViewItems() async {
     List<dynamic> eventData;
+    List<dynamic> coverPhotoData;
 
-    final events = await http.get(Uri.parse('$baseUrl/grid'));
+    final events = await http.get(Uri.parse('$baseUrl/events'));
     if (events.statusCode == 200) {
       eventData = jsonDecode(events.body);
-
     } else {
       throw Exception('Failed to fetch data from $baseUrl/events');
     }
+
+    final coverPhotos = await http.get(Uri.parse('$baseUrl/coverPhotos'));
+    if (coverPhotos.statusCode == 200) {
+      coverPhotoData = jsonDecode(coverPhotos.body);
+    } else {
+      throw Exception('Failed to fetch data from $baseUrl/coverPhotos');
+    }
+
     // combine eventData and coverPhotoData by eventId
-      // calculate crossAxisCount and mainAxisCount
-      for (var event in eventData) {
-            int crossAxisCount;
-            double mainAxisCount;
-            double aspectRatio =
-                event['coverPhotoWidth'] / event['coverPhotoHeight'];
+    // calculate crossAxisCount and mainAxisCount
+    for (var event in eventData) {
+      for (var coverPhoto in coverPhotoData) {
+        if (event['eventId'] == coverPhoto['eventId']) {
+          event['coverPhotoLink'] = coverPhoto['coverPhotoLink'];
 
-            if (aspectRatio >= 2) {
-              crossAxisCount = 2;
-              mainAxisCount = 1;
-            } else if (aspectRatio <= 0.5) {
-              crossAxisCount = 1;
-              mainAxisCount = 2;
-            } else {
-              crossAxisCount = 1;
-              mainAxisCount = 1;
-            }
+          int crossAxisCount;
+          double mainAxisCount;
 
-            event['crossAxisCount'] = crossAxisCount;
-            event['mainAxisCount'] = mainAxisCount;
-            event.remove('coverPhotoWidth');
-            event.remove('coverPhotoHeight');
+          double aspectRatio =
+              coverPhoto['coverPhotoWidth'] / coverPhoto['coverPhotoHeight'];
+
+          if (aspectRatio >= 2) {
+            crossAxisCount = 2;
+            mainAxisCount = 1;
+          } else if (aspectRatio <= 0.5) {
+            crossAxisCount = 1;
+            mainAxisCount = 2;
+          } else {
+            crossAxisCount = 1;
+            mainAxisCount = 1;
+          }
+
+          event['crossAxisCount'] = crossAxisCount;
+          event['mainAxisCount'] = mainAxisCount;
+          break;
+        }
       }
-      return eventData.map((e) => GridViewItem.fromJson(e)).toList();
+    }
+
+    return eventData.map((e) => GridViewItem.fromJson(e)).toList();
   }
 
+  // Future<DetailViewItem> fetchDetailViewItem() async{
+  //}
 }
