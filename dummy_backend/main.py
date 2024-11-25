@@ -53,6 +53,7 @@ events_data = [
         "venue": "Auditorium A",
         "description": "A talk on the latest trends in tech and innovation.",
         "startDateTime": "2024-11-15T10:00:00",
+        "endDateTime": "2024-11-15T13:00:00",  # 3-hour talk
         "tagName": "Technology",
         "registerLink": "https://www.google.com/search?q=techtalk2024",
     },
@@ -63,6 +64,7 @@ events_data = [
         "venue": "Art Gallery",
         "description": "An exhibition showcasing student artwork.",
         "startDateTime": "2024-11-18T14:30:00",
+        "endDateTime": "2024-11-18T19:00:00",  # 4.5-hour exhibition
         "tagName": "Arts",
         "registerLink": "https://www.google.com/search?q=artexhibition",
     },
@@ -73,6 +75,7 @@ events_data = [
         "venue": "Main Auditorium",
         "description": "Students pitch their startup ideas to a panel of investors.",
         "startDateTime": "2024-11-20T17:00:00",
+        "endDateTime": "2024-11-20T20:00:00",  # 3-hour pitch event
         "tagName": "Business",
         "registerLink": "https://www.google.com/search?q=pitchnight",
     },
@@ -83,6 +86,7 @@ events_data = [
         "venue": "Outdoor Amphitheater",
         "description": "A live music jam session with performances by students.",
         "startDateTime": "2024-11-22T18:00:00",
+        "endDateTime": "2024-11-22T22:00:00",  # 4-hour jam session
         "tagName": "Music",
         "registerLink": "https://www.google.com/search?q=musicjam",
     },
@@ -93,6 +97,7 @@ events_data = [
         "venue": "Room 301, CS Building",
         "description": "24-hour coding competition where teams solve real-world problems.",
         "startDateTime": "2024-11-25T09:00:00",
+        "endDateTime": "2024-11-26T09:00:00",  # 24-hour hackathon
         "tagName": "Hackathon",
         "registerLink": "https://www.google.com/search?q=hackathon",
     },
@@ -103,6 +108,7 @@ events_data = [
         "venue": "Room 204, Humanities Block",
         "description": "Inter-college debate competition on current affairs.",
         "startDateTime": "2024-11-28T13:00:00",
+        "endDateTime": "2024-11-28T17:00:00",  # 4-hour debate competition
         "tagName": "Debate",
         "registerLink": "https://www.google.com/search?q=debatechampionship",
     },
@@ -113,6 +119,7 @@ events_data = [
         "venue": "Room 101, Engineering Block",
         "description": "Workshop on AI and machine learning techniques.",
         "startDateTime": "2024-12-01T10:00:00",
+        "endDateTime": "2024-12-01T14:00:00",  # 4-hour workshop
         "tagName": "Artificial Intelligence",
         "registerLink": "https://www.google.com/search?q=aiworkshop",
     },
@@ -123,6 +130,7 @@ events_data = [
         "venue": "University Stadium",
         "description": "Annual sports meet with events including track and field.",
         "startDateTime": "2024-12-05T08:00:00",
+        "endDateTime": "2024-12-05T17:00:00",  # All-day sports event
         "tagName": "Sports",
         "registerLink": "https://www.google.com/search?q=sportsmeet",
     },
@@ -133,6 +141,7 @@ events_data = [
         "venue": "Room 201, Arts Block",
         "description": "Photography competition with themes like nature and architecture.",
         "startDateTime": "2024-12-10T11:00:00",
+        "endDateTime": "2024-12-10T15:00:00",  # 4-hour contest
         "tagName": "Photography",
         "registerLink": "https://www.google.com/search?q=photocontest",
     },
@@ -143,6 +152,7 @@ events_data = [
         "venue": "Room 102, Engineering Block",
         "description": "Showcase of student-built robots and autonomous systems.",
         "startDateTime": "2024-12-12T14:00:00",
+        "endDateTime": "2024-12-12T18:00:00",  # 4-hour showcase
         "tagName": "Robotics",
         "registerLink": "https://www.google.com/search?q=roboticsshowcase",
     },
@@ -153,6 +163,7 @@ events_data = [
         "venue": "Conference Hall B",
         "description": "A symposium discussing the future of artificial intelligence.",
         "startDateTime": "2024-12-05T09:30:00",
+        "endDateTime": "2024-12-05T15:30:00",  # 6-hour symposium
         "tagName": "Technology",
         "registerLink": "https://www.google.com/search?q=aisymposium2024",
     },
@@ -163,6 +174,7 @@ events_data = [
         "venue": "Fashion Centre",
         "description": "A glamorous fashion show featuring top designers.",
         "startDateTime": "2024-12-10T19:00:00",
+        "endDateTime": "2024-12-10T22:00:00",  # 3-hour gala
         "tagName": "Fashion",
         "registerLink": "https://www.google.com/search?q=fashionshowgala",
     },
@@ -173,6 +185,7 @@ events_data = [
         "venue": "Medical Center Hall",
         "description": "Explore the latest advancements in medical technology.",
         "startDateTime": "2024-12-15T11:00:00",
+        "endDateTime": "2024-12-15T17:00:00",  # 6-hour conference
         "tagName": "Healthcare",
         "registerLink": "https://www.google.com/search?q=medtechconference",
     },
@@ -183,6 +196,7 @@ events_data = [
         "venue": "Film Studio",
         "description": "Enjoy a series of classic and contemporary film screenings.",
         "startDateTime": "2024-12-20T18:30:00",
+        "endDateTime": "2024-12-20T22:00:00",  # 3.5-hour screening
         "tagName": "Entertainment",
         "registerLink": "https://www.google.com/search?q=filmscreeningseries",
     },
@@ -193,6 +207,7 @@ events_data = [
         "venue": "Eco Center",
         "description": "Learn about eco-friendly practices for sustainable living.",
         "startDateTime": "2024-12-25T13:00:00",
+        "endDateTime": "2024-12-25T17:00:00",  # 4-hour workshop
         "tagName": "Environment",
         "registerLink": "https://www.google.com/search?q=sustainablelivingworkshop",
     },
@@ -203,6 +218,7 @@ events_data = [
         "venue": "Culinary Institute",
         "description": "Hands-on cooking lessons from renowned chefs.",
         "startDateTime": "2025-01-02T15:00:00",
+        "endDateTime": "2025-01-02T19:00:00",  # 4-hour masterclass
         "tagName": "Food & Beverage",
         "registerLink": "https://www.google.com/search?q=culinarymasterclass",
     },
@@ -213,6 +229,7 @@ events_data = [
         "venue": "Outdoor Stadium",
         "description": "A weekend of live performances by top artists.",
         "startDateTime": "2025-01-10T16:00:00",
+        "endDateTime": "2025-01-12T23:00:00",  # 3-day festival
         "tagName": "Music",
         "registerLink": "https://www.google.com/search?q=musicfestival2025",
     },
@@ -223,6 +240,7 @@ events_data = [
         "venue": "Robotics Center",
         "description": "Showcase of cutting-edge robotics technology and innovations.",
         "startDateTime": "2025-01-15T10:30:00",
+        "endDateTime": "2025-01-15T17:00:00",  # 6.5-hour expo
         "tagName": "Technology",
         "registerLink": "https://www.google.com/search?q=roboticsexpo",
     },
@@ -233,6 +251,7 @@ events_data = [
         "venue": "Library Auditorium",
         "description": "Discussions on literature, writing, and storytelling.",
         "startDateTime": "2025-01-20T14:00:00",
+        "endDateTime": "2025-01-20T18:00:00",  # 4-hour symposium
         "tagName": "Literature",
         "registerLink": "https://www.google.com/search?q=literarysymposium",
     },
@@ -243,6 +262,7 @@ events_data = [
         "venue": "Virtual Reality Center",
         "description": "Experience the latest in virtual reality technology.",
         "startDateTime": "2025-01-25T11:30:00",
+        "endDateTime": "2025-01-25T16:00:00",  # 4.5-hour showcase
         "tagName": "Technology",
         "registerLink": "https://www.google.com/search?q=vrshowcase",
     },
@@ -253,6 +273,7 @@ events_data = [
         "venue": "Art Gallery",
         "description": "A showcase of contemporary art pieces.",
         "startDateTime": "2025-02-05T10:00:00",
+        "endDateTime": "2025-02-05T18:00:00",  # 8-hour exhibition
         "tagName": "Art",
         "registerLink": "https://www.google.com/search?q=artexhibition",
     },
@@ -263,6 +284,7 @@ events_data = [
         "venue": "Innovation Center",
         "description": "Bringing together tech entrepreneurs and investors.",
         "startDateTime": "2025-02-10T09:30:00",
+        "endDateTime": "2025-02-10T17:30:00",  # Full-day summit
         "tagName": "Technology",
         "registerLink": "https://www.google.com/search?q=startupsummit",
     },
@@ -273,79 +295,98 @@ events_data = [
         "venue": "Community Center",
         "description": "Learn various dance styles from professional instructors.",
         "startDateTime": "2025-02-15T14:00:00",
+        "endDateTime": "2025-02-15T18:00:00",  # 4-hour workshop
         "tagName": "Performing Arts",
         "registerLink": "https://www.google.com/search?q=danceworkshop",
     },
     {
-        "eventId": "b2c7a1d9-f5e3-4c89-1b2d-5a9c3b7a1d9f",
+        "eventId": "d1e9b5c3-a7f2-4e89-2d9c-3e7f5a1d9b7e",
         "eventName": "Science Fair",
         "organizerName": "STEM Education Foundation",
         "venue": "Science Museum",
         "description": "Exhibits and activities showcasing scientific discoveries.",
         "startDateTime": "2025-02-20T10:00:00",
+        "endDateTime": "2025-02-20T17:00:00",  # All-day science fair
         "tagName": "Science",
         "registerLink": "https://www.google.com/search?q=sciencefair",
     },
     {
-        "eventId": "d1e9b5c3-a7f2-4e89-2d1b-5c3a9f1b5d3a",
-        "eventName": "Yoga Retreat",
-        "organizerName": "Mindfulness Wellness Center",
-        "venue": "Retreat Resort",
-        "description": "A rejuvenating yoga retreat in a serene environment.",
-        "startDateTime": "2025-02-25T08:00:00",
-        "tagName": "Wellness",
-        "registerLink": "https://www.google.com/search?q=yogaretreat",
-    },
-    {
-        "eventId": "f2e7a1b9-d5c3-4f89-1a2d-9c5b3a7f2d5c",
-        "eventName": "Photography Masterclass",
-        "organizerName": "Photography Society",
-        "venue": "Art Studio",
-        "description": "Professional photography tips and techniques.",
-        "startDateTime": "2025-03-02T11:00:00",
-        "tagName": "Photography",
-        "registerLink": "https://www.google.com/search?q=photographymasterclass",
-    },
-    {
-        "eventId": "b3c9d5a1-7e2f-4b89-2d1c-5a9f3e7b1d5a",
-        "eventName": "Charity Gala",
-        "organizerName": "Humanitarian Foundation",
-        "venue": "Grand Ballroom",
-        "description": "An elegant event to raise funds for charitable causes.",
-        "startDateTime": "2025-03-07T18:30:00",
-        "tagName": "Charity",
-        "registerLink": "https://www.google.com/search?q=charitygala",
-    },
-    {
-        "eventId": "e5d3c9b1-2f7a-4a89-1d5c-3b9a7f2d5c3b",
-        "eventName": "Fitness Expo",
-        "organizerName": "Health & Fitness Expo",
-        "venue": "Fitness Convention Center",
-        "description": "Showcasing the latest in fitness trends and products.",
-        "startDateTime": "2025-03-12T10:00:00",
-        "tagName": "Fitness",
-        "registerLink": "https://www.google.com/search?q=fitnessexpo",
-    },
-    {
-        "eventId": "a1b5c3d9-f2e7-4b89-1d5c-3a9f1b5c3d9f",
+        "eventId": "f5b8c3a7-2d9c-4c8b-9a2f-3d1e9a1b9c7f",
         "eventName": "Gaming Tournament",
-        "organizerName": "Esports League",
+        "organizerName": "Esports Club",
         "venue": "Gaming Arena",
-        "description": "Compete in exciting video game tournaments.",
-        "startDateTime": "2025-03-17T12:00:00",
+        "description": "Compete in a series of esports games for exciting prizes.",
+        "startDateTime": "2025-02-25T12:00:00",
+        "endDateTime": "2025-02-25T18:00:00",  # 6-hour tournament
         "tagName": "Gaming",
         "registerLink": "https://www.google.com/search?q=gamingtournament",
     },
     {
-        "eventId": "d9e7b1c5-3f2a-4b89-1d5c-3b7a9f2c5d3b",
-        "eventName": "Fashion Design Workshop",
-        "organizerName": "Fashion Design Institute",
-        "venue": "Design Studio",
-        "description": "Learn fashion design techniques from industry experts.",
-        "startDateTime": "2025-03-22T14:30:00",
-        "tagName": "Fashion",
-        "registerLink": "https://www.google.com/search?q=fashiondesignworkshop",
+        "eventId": "b7d1f6c3-2a7f-4b89-8c2a-5a1e9d3b9c5f",
+        "eventName": "Yoga Retreat",
+        "organizerName": "Wellness Center",
+        "venue": "Retreat Center",
+        "description": "A day-long yoga retreat focusing on mindfulness and wellness.",
+        "startDateTime": "2025-03-05T08:00:00",
+        "endDateTime": "2025-03-05T17:00:00",  # All-day yoga retreat
+        "tagName": "Wellness",
+        "registerLink": "https://www.google.com/search?q=yogaretreat",
     },
+    {
+        "eventId": "c1a9d5e3-b7f2-4a89-9c2d-3e5f1a9b6c7e",
+        "eventName": "Cultural Fest 2025",
+        "organizerName": "Cultural Committee",
+        "venue": "University Grounds",
+        "description": "A celebration of diverse cultures with performances and food stalls.",
+        "startDateTime": "2025-03-15T10:00:00",
+        "endDateTime": "2025-03-15T20:00:00",  # 10-hour cultural festival
+        "tagName": "Culture",
+        "registerLink": "https://www.google.com/search?q=culturalfest2025",
+    },
+    {
+        "eventId": "d5e9b3c7-a2f3-4d89-9c1b-5d1a7f3b5e7c",
+        "eventName": "Entrepreneurship Bootcamp",
+        "organizerName": "Business Incubator",
+        "venue": "Innovation Hub",
+        "description": "A 2-day intensive bootcamp for budding entrepreneurs.",
+        "startDateTime": "2025-03-20T09:00:00",
+        "endDateTime": "2025-03-21T17:00:00",  # 2-day bootcamp
+        "tagName": "Business",
+        "registerLink": "https://www.google.com/search?q=entrepreneurshipbootcamp",
+    },
+    {
+        "eventId": "f8c7d5b1-4e3f-4b89-9a2d-1f9b3a7d9e1f",
+        "eventName": "Photography Workshop",
+        "organizerName": "Photography Club",
+        "venue": "Room 105, Arts Block",
+        "description": "A hands-on workshop for budding photographers.",
+        "startDateTime": "2025-04-02T14:00:00",
+        "endDateTime": "2025-04-02T18:00:00",  # 4-hour workshop
+        "tagName": "Photography",
+        "registerLink": "https://www.google.com/search?q=photographyworkshop",
+    },
+    {
+        "eventId": "a2b3c9f1-2d7f-4b89-9c2a-3e1f9b3d7c5a",
+        "eventName": "AI and Machine Learning Conference",
+        "organizerName": "AI Research Group",
+        "venue": "Conference Hall A",
+        "description": "Explore the latest developments in AI and machine learning.",
+        "startDateTime": "2025-04-10T09:00:00",
+        "endDateTime": "2025-04-10T17:00:00",  # Full-day conference
+        "tagName": "Technology",
+        "registerLink": "https://www.google.com/search?q=aimlconference",
+    },
+    {
+        "eventId": "d7e5a9c3-4b8f-4a89-9c1a-5e2f1a9d7b5e",
+        "eventName": "Drama Club Play",
+        "organizerName": "Drama Club",
+        "venue": "Theater Hall",
+        "description": "A live play performed by the university's drama club.",
+        "startDateTime": "2025-04-15T19:00:00",
+        "endDateTime": "2025-04-15T21:30:00",  # 2.5-hour play
+        "tagName": "Drama",
+        "registerLink": "https://www.google.com/search?q=dramaplay",
+    }
 ]
 
 # Dummy cover photos data
@@ -532,6 +573,9 @@ cover_photos_data = [
     },
 ]
 
+cover_event_ids = {item['eventId'] for item in cover_photos_data}
+filtered_events_data = [event for event in events_data if event['eventId'] in cover_event_ids]
+
 
 # FastAPI endpoint to get all events
 @app.get("/events", response_model=List[Event])
@@ -541,7 +585,7 @@ async def get_events():
 
     Returns a list of all available events with their details.
     """
-    return events_data
+    return filtered_events_data
 
 
 # New endpoint to get a single event by eventId
