@@ -60,6 +60,7 @@ class _GridViewPageState extends State<GridViewPage> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    print(snapshot.data);
                     return const Center(child: Text('No events found'));
                   } else {
                     final eventItems = _searchQuery.isEmpty
@@ -77,8 +78,9 @@ class _GridViewPageState extends State<GridViewPage> {
                               _navigateToDetailsPage(
                                   context, eventItems[index].eventId);
                             },
-                            child:
-                                Image.network(eventItems[index].coverPhotoLink),
+                            child: Image.network(
+                                eventItems[index].coverPhotoLink,
+                                fit: BoxFit.cover),
                           ),
                         );
                       },
