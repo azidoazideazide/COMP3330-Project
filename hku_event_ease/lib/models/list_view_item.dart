@@ -3,6 +3,7 @@ class ListViewItem {
   final String eventName;
   final String organizerName;
   final String tagName;
+  final DateTime createdAt;
   final DateTime startDateTime;
   final String coverPhotoLink;
   bool isFavorite;
@@ -12,6 +13,7 @@ ListViewItem({
     required this.eventName,
     required this.organizerName,
     required this.tagName,
+    required this.createdAt,
     required this.startDateTime,
     required this.coverPhotoLink,
     this.isFavorite = false, // default to not favorite
@@ -31,6 +33,7 @@ ListViewItem({
       eventName: json['eventName'],
       organizerName: json['organizerName'],
       tagName: json['tagName'],
+      createdAt: DateTime.parse(json['createdAt']),
       startDateTime: DateTime.parse(json['startDateTime']),
       coverPhotoLink: json['coverPhotoLink'],
       isFavorite: json['isFavorite'] ?? false,

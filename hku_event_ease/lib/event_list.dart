@@ -61,6 +61,7 @@ class _EventListState extends State<EventList> {
 
   Future<void> _fetchEvents() async {
     final events = await apiService.fetchListViewItems();
+    events.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     setState(() {
       _allEventItems = events;
       _applyFavorites();
