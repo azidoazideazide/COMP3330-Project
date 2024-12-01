@@ -17,7 +17,7 @@ class ApiService {
     if (events.statusCode == 200) {
       eventData = jsonDecode(events.body);
     } else {
-      throw Exception('Failed to fetch data from $baseUrl/events');
+      throw Exception('Failed to fetch data from $baseUrl/list');
     }
     return eventData.map((e) => ListViewItem.fromJson(e)).toList();
   }
@@ -45,7 +45,7 @@ class ApiService {
       eventData = jsonDecode(events.body);
 
     } else {
-      throw Exception('Failed to fetch data from $baseUrl/events');
+      throw Exception('Failed to fetch data from $baseUrl/grid');
     }
     // combine eventData and coverPhotoData by eventId
       // calculate crossAxisCount and mainAxisCount
