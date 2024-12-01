@@ -33,13 +33,15 @@ class _EventListState extends State<EventList> {
 
   final Map<String, Color> _tags = {
     'Sports': Colors.blueAccent,
+    'Architecture': Colors.tealAccent,
     'Seminars': Colors.greenAccent,
-    'Workshops': Colors.orangeAccent,
+    'Survey': Colors.amberAccent,
+    'Business': Colors.deepOrangeAccent,
     'Clubs': Colors.purpleAccent,
     'Music': Colors.redAccent,
-    'Networking': Colors.green,
     'Technology': Colors.cyanAccent,
-    'Arts': Colors.pinkAccent,
+    'Workshops': Colors.orangeAccent,
+    'Art': Colors.pinkAccent,
   };
 
   @override
